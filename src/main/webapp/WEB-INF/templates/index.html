@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: html_head">
+
+</head>
+
+<body class="sb-nav-fixed">
+<nav th:replace="fragments :: html_nav" class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+
+</nav>
+<div  id="layoutSidenav">
+  <div th:replace="fragments :: html_menu" id="layoutSidenav_nav">
+
+  </div>
+  <div id="layoutSidenav_content">
+    <div class="container-fluid px-4">
+
+      <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"></li>
+      </ol>
+      <main>
+        <div class="container-fluid px-4">
+          <h4 class="mt-1" th:if="${session.user.role.id != 2}">Chúc bạn một ngày tốt lành</h4>
+          <div class="row" th:if="${session.user.role.id == 2}" >
+            <div class="col-xl-4 col-md-6">
+              <div class="card bg-success text-white mb-4">
+                <!--<div class="card-body">Turnover : <strong th:text="${#numbers.formatCurrency(sum)}"></strong> </div>-->
+                <div class="card-body">Tổng doanh thu : <strong th:text="${#numbers.formatCurrency(sum)}"></strong> </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card bg-danger text-white mb-4">
+                <!--<div class="card-body">Turnover : <strong th:text="${#numbers.formatCurrency(sum)}"></strong> </div>-->
+                <div class="card-body">Tổng tiền đổi trả : <strong th:text="${#numbers.formatCurrency(sumrequest)}"></strong> </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+              <div class="card bg-warning text-white mb-4">
+                <!--<div class="card-body">Turnover : <strong th:text="${#numbers.formatCurrency(sum)}"></strong> </div>-->
+                <div class="card-body">Lợi nhuận : <strong th:text="${#numbers.formatCurrency(loinhuan)}"></strong> </div>
+              </div>
+            </div>
+          </div>
+          <!-- -->
+          <h4 class="mt-1" th:if="${session.user.role.id == 2}">Danh sách món ăn đã order</h4>
+          <div class="card-body" th:if="${session.user.role.id == 2}">
+            <table id="datatablesSimple">
+              <thead>
+              <tr style="background-color: gray !important;">
+                <th>STT</th>
+                <th>Tên món ăn</th>
+                <th>Ảnh</th>
+                <th>Giá tiền</th>
+                <th>Số lượng order</th>
+              </tr>
+              </thead>
+              <tbody>
+              <th:block th:each="category,index : ${listfoodorder}">
+                <tr>
+                  <td th:text="${index.index +1}"></td>
+                  <td th:text="${category[1]}"></td>
+                  <td>
+                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">
+                  </td>
+                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>
+                  <td th:text="${category[4]}"></td>
+                </tr>
+              </th:block>
+              </tbody>
+            </table>
+          </div>
+          <!-- -->
+          <h4 class="mt-1" th:if="${session.user.role.id == 2}">Danh sách món ăn đổi trả</h4>
+          <div class="card-body" th:if="${session.user.role.id == 2}">
+            <table id="datatablesSimple1">
+              <thead>
+              <tr style="background-color: gray !important;">
+                <th>STT</th>
+                <th>Tên món ăn</th>
+                <th>Ảnh</th>
+                <th>Giá tiền</th>
+                <th>Số lượng đổi trả</th>
+              </tr>
+              </thead>
+              <tbody>
+              <th:block th:each="category,index : ${listrequest1}">
+                <tr>
+                  <td th:text="${index.index +1}"></td>
+                  <td th:text="${category[1]}"></td>
+                  <td>
+                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">
+                  </td>
+                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>
+                  <td th:text="${category[4]}"></td>
+                </tr>
+              </th:block>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        </div>
+      </main>
+
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/admin1/assets/assets/demo/chart-area-demo.js}"></script>
+<script th:src="@{/admin1/assets/assets/demo/chart-bar-demo.js}"></script>
+<script th:src="@{/admin1/assets/assets/demo/chart-pie-demo.js}"></script>
+</body>
+
+</html>

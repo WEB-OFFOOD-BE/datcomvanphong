@@ -1,0 +1,89 @@
+package com.example.websitedatmon.controllers;
+
+import com.example.websitedatmon.entity.*;
+import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
+import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
+import com.example.websitedatmon.utils.MailUtil;
+import com.example.websitedatmon.utils.Middleware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+@Controller
+@RequestMapping("/user")
+public class OrderController {
+    @Autowired
+    OrderServiceImpl orderService;
+
+    @Autowired
+    MenuServiceImpl menuService;
+
+    @Autowired
+    public JavaMailSenderImpl javaMailSenderImpl;
+
+    Middleware middleware = new Middleware();
+
+    @GetMapping({ "/order"})
+    public ModelAndView index(String msg)
+    {
+        ModelAndView mv = new ModelAndView("order");
+        Sort sort = Sort.by("id").descending();
+        List<Orders> list = orderService.findAll(sort);
+        List<Menu> menus = menuService.getToday();
+        mv.addObject("msg",msg);
+        mv.addObject("list",list);
+        mv.addObject("menus",menus);
+        return mv;
+    }
+
+    @GetMapping({ "/history"})
+    public ModelAndView history(String msg)
+    {
+        ModelAndView mv = new ModelAndView("history");
+        Sort sort = Sort.by("id").descending();
+        List<Orders> list = orderService.findAll(sort);
+        mv.addObject("msg",msg);
+        mv.addObject("list",list);
+        return mv;
+    }
+
+    @PostMapping(value = "/order-edit")
+    public ModelAndView update(HttpServletRequest request){
+        ModelAndView mv = new ModelAndView("redirect:order");
+        int status = Integer.parseInt(request.getParameter("status"));
+        int id = Integer.parseInt(request.getParameter("id"));
+        Orders order = orderService.findOrderById(id);
+        order.setStatus(status);
+        orderService.save(order);
+        mv.addObject("msg","success");
+        return mv;
+    }
+
+    @PostMapping(value = "/order-group")
+    public ModelAndView group(HttpServletRequest request){
+        ModelAndView mv = new ModelAndView("redirect:order");
+        String html = "<p>Món ăn đã hoàn thành. Vui lòng tới nhà bếp để nhận món!</p>";
+        int id = Integer.parseInt(request.getParameter("id"));
+        String datetoday = java.time.LocalDate.now().toString();
+        orderService.update(id,datetoday);
+        List<Orders> list = orderService.listSendMail(id,datetoday);
+        for (Orders order : list) {
+            try {
+                MailUtil.sendHtmlMail(this.javaMailSenderImpl,order.getUser().getEmail(),"Thông báo",html);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        mv.addObject("msg","success");
+        return mv;
+    }
+}
