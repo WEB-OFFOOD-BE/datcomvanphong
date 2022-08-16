@@ -45,18 +45,20 @@ public class FoodController {
         String name = request.getParameter("name");
         String price = request.getParameter("price");
         String desciption = request.getParameter("description");
-        Food post = new Food();
-        post.setName(name);
-        post.setDescription(desciption);
-        post.setCreated(java.time.LocalDate.now());
+        Food food = new Food();
+        food.setName(name);
+        food.setDescription(desciption);
+        food.setCreated(java.time.LocalDate.now());
         String fileName = "";
         try {
             fileName = FileUtil.upload(image,request);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        post.setImage(fileName);
-        foodService.save(post);
+        food.setImage(fileName);
+        food.setAvgRate(0f);
+        food.setIsActive(1);
+        foodService.save(food);
         mv.addObject("msg","success");
         return mv;
     }
@@ -64,8 +66,7 @@ public class FoodController {
     public ModelAndView update(HttpServletRequest request,@RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:food");
         String name = request.getParameter("name");
-        String price = request.getParameter("price");
-        String desciption = request.getParameter("description");
+        String description = request.getParameter("description");
         int id = Integer.parseInt(request.getParameter("id"));
         String fileName = "";
         if(image.isEmpty()) {
@@ -78,11 +79,11 @@ public class FoodController {
                 e.printStackTrace();
             }
         }
-        Food postud = foodService.findFoodById(id);
-        postud.setName(name);
-        postud.setDescription(desciption);
-        postud.setImage(fileName);
-        foodService.save(postud);
+        Food food = foodService.findFoodById(id);
+        food.setName(name);
+        food.setDescription(description);
+        food.setImage(fileName);
+        foodService.save(food);
         mv.addObject("msg","success");
         return mv;
     }

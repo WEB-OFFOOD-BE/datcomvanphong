@@ -30,7 +30,7 @@ public class Food {
     @Column(name = "name")
     private String name;
     @Column(name = "isActive")
-    private Byte isActive;
+    private Integer isActive;
     @Column(name = "avg_rate")
     private Float avgRate;
 

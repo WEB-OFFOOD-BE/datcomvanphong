@@ -37,6 +37,16 @@ public class EmployeeController {
         return mv;
     }
 
+    @GetMapping({ "/profile"})
+    public ModelAndView getProfile(String msg)
+    {
+        List<User> list = userService.listEmployee();
+        ModelAndView mv = new ModelAndView("profile");
+        mv.addObject("msg",msg);
+        mv.addObject("list",list);
+        return mv;
+    }
+
     @PostMapping(value = "/employee-add")
     public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:employee");
@@ -46,6 +56,7 @@ public class EmployeeController {
         String username = request.getParameter("taikhoan");
         String password =request.getParameter("matkhau");
         User user = new User();
+        user.setIsActive(1);
         user.setEmail(email);
         user.setFullName(fullname);
         user.setPhoneNumber(sdt);
@@ -61,6 +72,23 @@ public class EmployeeController {
         }
         user.setImage(fileName);
         userService.save(user);
+        mv.addObject("msg","success");
+        return mv;
+    }
+
+    @PostMapping(value = "/employee-change")
+    public ModelAndView changAvatar(HttpServletRequest request, @RequestParam("file") MultipartFile image){
+        ModelAndView mv = new ModelAndView("redirect:employee");
+        int id = Integer.parseInt(request.getParameter("id"));
+        var user = userService.findUserById(id);
+        String avatar = "";
+        try {
+            avatar = FileUtil.upload(image,request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            user.setImage(avatar);
+            userService.save(user);
         mv.addObject("msg","success");
         return mv;
     }
