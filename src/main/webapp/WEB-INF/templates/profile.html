@@ -66,6 +66,8 @@
                                         <img class="rounded-circle" height="150px" width="150px" th:if="${session.user.image}" th:src="${'/resources/uploads/'}+${session.user.image}">
                                         <div class="mt-3">
                                             <h4 th:text="${session.user.fullName}"></h4>
+                                            <hr>
+                                            <h6>Mã số lấy cơm: </h6><h6 th:utext="${session.user.id}"></h6>
                                             <button class="btn btn-primary">Đặt cơm</button>
                                             <button class="btn btn-outline-primary">Lịch sử đặt</button>
                                         </div>
@@ -76,6 +78,15 @@
                         <div class="col-md-8">
                             <div class="card mb-3">
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Mã số nhân viên</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary" th:text="${session.user.id}">
+
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <h6 class="mb-0">Họ và tên</h6>
