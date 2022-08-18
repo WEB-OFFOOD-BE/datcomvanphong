@@ -15,4 +15,5 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
     List<Request> findAll(Sort sort);
     Request save(Request request);
     void deleteById(int id);
+    List<Request> findAllByOrderId(int id);
 }

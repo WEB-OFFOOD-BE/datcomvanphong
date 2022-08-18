@@ -1,8 +1,10 @@
 package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.entity.*;
+import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
+import com.example.websitedatmon.services.RequestService;
 import com.example.websitedatmon.utils.MailUtil;
 import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,13 @@ public class OrderController {
     MenuServiceImpl menuService;
 
     @Autowired
+    RequestService requestService;
+
+    @Autowired
     public JavaMailSenderImpl javaMailSenderImpl;
+
+    @Autowired
+    FoodServiceImpl foodService;
 
     Middleware middleware = new Middleware();
 
@@ -53,6 +61,19 @@ public class OrderController {
         List<Orders> list = orderService.findAll(sort);
         mv.addObject("msg",msg);
         mv.addObject("list",list);
+        return mv;
+    }
+
+    @GetMapping({ "/current-order"})
+    public ModelAndView currentOrder(String msg)
+    {
+        ModelAndView mv = new ModelAndView("current");
+        Sort sort = Sort.by("id").descending();
+        List<Orders> list = orderService.findAll(sort);
+        Orders first = list.get(0);
+        var food = foodService.findFoodById(first.getFoodId());
+        mv.addObject("msg",msg);
+        mv.addObject("first",food);
         return mv;
     }
 
@@ -86,4 +107,13 @@ public class OrderController {
         mv.addObject("msg","success");
         return mv;
     }
+    @GetMapping({ "/current"})
+    public ModelAndView current(String msg){
+        ModelAndView mv = new ModelAndView("current");
+        var current = requestService.findRequest(3);
+        mv.addObject("msg",msg);
+        mv.addObject("current",current);
+        return mv;
+    }
+
 }
