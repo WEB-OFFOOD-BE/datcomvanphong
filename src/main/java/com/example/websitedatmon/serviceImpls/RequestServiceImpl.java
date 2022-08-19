@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,17 +54,23 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestResponse findRequest(int userId) {
+    public List<RequestResponse> findRequest(int userId) {
         var ownerRequest = userRepository.findUserById(userId);
         var orders = orderRepository.findOrderByUser(ownerRequest);
         var currentOrder = orders.get(orders.size() - 1);
-        var requests = requestRepository.findAllByOrderIdAndStatus(currentOrder.getId(), 3);
-        return RequestResponse.builder()
-                .FoodName(currentOrder.getFood().getName())
-                .image(requests.get(requests.size() - 1).getImage())
-                .reason(requests.get(requests.size() - 1).getDescription())
-                .status(baseService.checkStatus(requests.get(requests.size() - 1).getStatus()))
-                .build();
+        var requests = requestRepository.findAllByUserId(3);
+        List<RequestResponse> responses = new ArrayList<>();
+         for (var item : requests){
+             responses.add(
+                     RequestResponse.builder()
+                             .FoodName(item.getOrders().getFood().getName())
+                             .image(item.getImage())
+                             .reason(item.getDescription())
+                             .status(baseService.checkStatus(item.getStatus()))
+                             .build()
+             );
+         }
+        return responses;
     }
 
 

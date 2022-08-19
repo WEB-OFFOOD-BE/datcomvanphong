@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class RequestResponse {
-    String FoodName;
-    String reason;
-    String image;
-    String username;
-    String status;
+    public String FoodName;
+    public String reason;
+    public String image;
+    public String username;
+    public String status;
 
 }

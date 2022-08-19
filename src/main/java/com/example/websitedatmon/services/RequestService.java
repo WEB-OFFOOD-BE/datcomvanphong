@@ -15,5 +15,5 @@ public interface RequestService {
     Request save(Request request);
     void deleteById(int id);
 
-    RequestResponse findRequest(int userId);
+    List<RequestResponse> findRequest(int userId);
 }
