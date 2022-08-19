@@ -57,7 +57,7 @@ public class RequestServiceImpl implements RequestService {
         var ownerRequest = userRepository.findUserById(userId);
         var orders = orderRepository.findOrderByUser(ownerRequest);
         var currentOrder = orders.get(orders.size() - 1);
-        var requests = requestRepository.findAllByOrderId(currentOrder.getId());
+        var requests = requestRepository.findAllByOrderIdAndStatus(currentOrder.getId(), 3);
         return RequestResponse.builder()
                 .FoodName(currentOrder.getFood().getName())
                 .image(requests.get(requests.size() - 1).getImage())

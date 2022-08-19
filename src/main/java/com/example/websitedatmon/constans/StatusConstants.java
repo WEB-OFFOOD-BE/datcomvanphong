@@ -1,13 +1,13 @@
 package com.example.websitedatmon.constans;
 
 public enum StatusConstants {
-    PROGRESSING(1),
-    COOKED(2),
-    RECEIVED(3),
-    APPROVED(4),
-    UNAPPROVED(5),
-    TIME_OUT(6),
-    DELETED(7)
+    PROGRESSING(1), // chờ xử lý
+    COOKED(2), // đã hoàn thành
+    RECEIVED(3), // Đã nhận
+    APPROVED(4), // xác nhận yêu cầu
+    UNAPPROVED(5), // Không xác nhận yêu cầu
+    TIME_OUT(6), // Hết giờ
+    DELETED(7) // Đã xoá
     ;
 
     private final Integer active;

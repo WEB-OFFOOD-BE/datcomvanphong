@@ -109,7 +109,7 @@ public class OrderController {
     }
     @GetMapping({ "/current"})
     public ModelAndView current(String msg){
-        ModelAndView mv = new ModelAndView("current");
+        ModelAndView mv = new ModelAndView("requestProgressing");
         var current = requestService.findRequest(3);
         mv.addObject("msg",msg);
         mv.addObject("current",current);
