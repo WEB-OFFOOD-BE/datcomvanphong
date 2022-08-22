@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -79,7 +80,8 @@ public class EmployeeController {
     @PostMapping(value = "/employee-change")
     public ModelAndView changAvatar(HttpServletRequest request, @RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:employee");
-        int id = Integer.parseInt(request.getParameter("id"));
+        HttpSession session = request.getSession();
+        int id = Integer.parseInt(session.getId());
         var user = userService.findUserById(id);
         String avatar = "";
         try {

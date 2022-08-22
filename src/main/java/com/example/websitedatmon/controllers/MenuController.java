@@ -87,7 +87,9 @@ public class MenuController {
             if(check.size() == 0){
                 Food food = foodService.findFoodById(Integer.parseInt(arrId.get(i)));
                 Menu menu = new Menu();
-                menu.setFood(food);
+                menu.setFoodId(food.getId());
+                menu.setIsActive(1);
+//                menu.setFood(food);
                 menu.setDate(dateString);
                 menu.setStatus(1);
                 menuService.save(menu);
