@@ -43,7 +43,6 @@ public class FoodController {
     public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:food");
         String name = request.getParameter("name");
-        String price = request.getParameter("price");
         String desciption = request.getParameter("description");
         Food food = new Food();
         food.setName(name);

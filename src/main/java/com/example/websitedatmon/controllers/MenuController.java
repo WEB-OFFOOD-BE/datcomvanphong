@@ -66,11 +66,12 @@ public class MenuController {
         }else{
             mv.addObject("check",false);
         }
-        if(now.getHour() >= CommonConstants.START_ORDER && now.getHour() <= CommonConstants.END_ORDER){
-            mv.addObject("checkOrder",true);
-        }else{
-            mv.addObject("checkOrder",false);
-        }
+//        if(now.getHour() >= CommonConstants.START_ORDER && now.getHour() <= CommonConstants.END_ORDER){
+//            mv.addObject("checkOrder",true);
+//        }else{
+//            mv.addObject("checkOrder",false);
+//        }
+        mv.addObject("checkOrder",true);
         return mv;
     }
 
