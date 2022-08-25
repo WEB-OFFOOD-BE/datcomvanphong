@@ -196,9 +196,8 @@
                                                     </figure>
                                                 </div>
                                                 <div class="col text-center">
-                                                    <h4 class="text-primary" th:text="${item.id}">Junior Frontend
-                                                        Developer</h4>
-                                                    <h6 th:text="${item.food.name}">Tên món ăn</h6>
+
+                                                    <h6 class="mt-lg-5" th:text="${item.food.name}">Tên món ăn</h6>
                                                 </div>
                                                 <div class="col py-2">
                                                     <h6>Ngày đặt món</h6>
@@ -213,7 +212,7 @@
                                                 <div class="col ml-8">
                                                     <br>
 <!--                                                    <a href="#" class="btn btn-primary stretched-link">Xem chi tiết</a>-->
-                                                    <button th:if="${item.status == 2}" "m "type="button"
+                                                    <button th:if="${item.status == 2}" type="button"
                                                     class="btn btn-primary btn-rounded mr-md-3 mb-md-0 mb-2" data-bs-toggle="modal"
                                                     th:data-bs-target="'#exampleModal'+${item.id}">
                                                     Bình luận
