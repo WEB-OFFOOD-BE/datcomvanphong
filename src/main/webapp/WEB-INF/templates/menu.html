@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="en">
+<html lang="en">
 
 <head th:replace="fragments :: html_head">
 </head>
@@ -10,208 +10,331 @@
 </nav>
 
 <div id="layoutSidenav">
-  <div th:replace="fragments :: html_menu" id="layoutSidenav_nav">
+    <div th:replace="fragments :: html_menu" id="layoutSidenav_nav">
 
-  </div>
+    </div>
 
-  <div id="layoutSidenav_content">
-    <main>
-      <div class="container-fluid px-4">
-        <h1 th:if="${session.user.role.id == 2}"  class="mt-4">Danh sách món ăn của thực đơn ngày mai</h1>
-        <h1 th:if="${session.user.role.id == 3}" class="mt-4">THỰC ĐƠN NGÀY MAI</h1>
-        <div class="card mb-4">
-          <div class="card-header">
-            <div th:if="${msg == 'success'}" class="alert alert-success">
-              <strong>Thành công!</strong>
-            </div>
-            <div th:if="${msg == 'fail'}" class="alert alert-danger">
-              <strong Món ăn đã được thêm vào thực đơn hôm nay!</strong>
-            </div>
-            <button th:if="${session.user.role.id == 2 && check == true  }" type="button" class="btn btn-success" data-bs-toggle="modal"
-                    data-bs-target="#exampleModalAdd">
-              Thêm món ăn
-            </button>
-            <form th:if="${session.user.role.id == 2 && check == true  }" th:action="@{/user/send-mail}" method="post">
-              <button type="submit" class="btn btn-info" >
-                Gửi thông báo
-              </button>
-            </form>
-            <!-- Modal Add-->
-            <div class="modal fade" id="exampleModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabelll">Thêm món ăn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form th:action="@{/user/menu-add}" method="post" enctype="multipart/form-data">
-                      <div class="row">
-                        <div th:if="${checkSize != 0}" class="col-12">
-
-                          <label for=""
-                                 class="col-form-label">Món ăn:</label>
-                          <select class="form-control" name="items[]" multiple required>
-                            <option value="0">-- Chọn món ăn --</option>
-                            <th:block th:each="food,index : ${listF}">
-                              <option th:value="${food.id}" th:text="${food.name}"></option>
-                            </th:block>
-                          </select>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 th:if="${session.user.role.id == 2}" class="mt-4">Danh sách món ăn của thực đơn ngày mai</h1>
+                <h1 th:if="${session.user.role.id == 3}" class="mt-4">THỰC ĐƠN NGÀY MAI</h1>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div th:if="${msg == 'success'}" class="alert alert-success">
+                            <strong>Thành công!</strong>
                         </div>
-                        <div th:if="${checkSize == 0}" class="col-12">
-
-                          <label for=""
-                                 class="col-form-label">Đã hết món ăn trong hệ thống</label>
+                        <div th:if="${msg == 'fail'}" class="alert alert-danger">
+                            <strong> Món ăn đã được thêm vào thực đơn hôm nay!</strong>
+                        </div>
+                        <div class="btn-group" >
+                            <button th:if="${session.user.role.id == 2 && check == true  }" type="button"
+                                    class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalAdd">
+                                Thêm món ăn
+                            </button>
+                            <div>
+                                <form class="" th:if="${session.user.role.id == 2 && check == true  }" th:action="@{/user/send-mail}"
+                                      method="post">
+                                    <button type="submit" class="btn btn-info m-6">
+                                        Gửi thông báo
+                                    </button>
+                                </form>
+                            </div>
 
                         </div>
-                      </div>
+                        <!-- Modal Add-->
+                        <div class="modal fade" id="exampleModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabelll">Thêm món ăn</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="@{/user/menu-add}" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div th:if="${checkSize != 0}" class="col-12">
 
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button th:if="${checkSize != 0}" type="submit" class="btn btn-primary">Lưu </button>
-                      </div>
-                    </form>
-                  </div>
+                                                    <label for=""
+                                                           class="col-form-label">Món ăn:</label>
+                                                    <select class="form-control" name="items[]" multiple required>
+                                                        <option value="0">-- Chọn món ăn --</option>
+                                                        <th:block th:each="food,index : ${listF}">
+                                                            <option th:value="${food.id}"
+                                                                    th:text="${food.name}"></option>
+                                                        </th:block>
+                                                    </select>
+                                                </div>
+                                                <div th:if="${checkSize == 0}" class="col-12">
 
+                                                    <label
+                                                           class="col-form-label">Đã hết món ăn trong hệ thống</label>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button th:if="${checkSize != 0}" type="submit" class="btn btn-primary">
+                                                    Lưu
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal Add-->
+
+                        <div class="container px-4 px-lg-5 mt-5">
+                            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                                <th:block th:each="category,index  : ${list}">
+                                    <div class="col mb-4">
+                                        <div class="card h-150">
+                                            <div class="hover-zoom">
+                                                <img class="h-150" height="200px" width="200px"
+                                                     th:if="${category.food.image}"
+                                                     th:src="${'/resources/uploads/'}+${category.food.image}" alt="">
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="text-center">
+                                                    <h5 class="fw-bolder" th:text="${category.food.name}">Fancy
+                                                        Product</h5>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer pt-0 border-top-0 bg-transparent">
+                                                <div class="text-center" th:if="${session.user.role.id == 3}">
+                                                    <a class="btn btn-outline-dark mt-2"
+                                                       data-bs-toggle="modal"
+                                                       th:data-bs-target="'#idModel'+${category.id}"
+                                                       th:if="${checkOrder == true}">Đặt món</a>
+                                                    <a class="btn btn-outline-dark mt-2" data-bs-toggle="modal"
+                                                       th:data-bs-target="'#idModelDel'+${category.id} "
+                                                       th:if="${checkOrder == true}"
+                                                    >Đặt món</a>
+
+                                                    <a class="btn btn-outline-dark mt-2" data-bs-toggle="modal"
+                                                       th:data-bs-target="'#idModelDel'+${category.id} "
+                                                       th:if="${checkOrder == true}"
+                                                       th:text="${category.food.avgRate} + '★'"></a>
+
+
+                                                    <!--ModalOrder-->
+                                                    <div class="modal fade" th:id="'idModelDel' + ${category.id}"
+                                                         tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <form th:action="@{/user/menu-order}" method="post">
+                                                                        <section style="background-color: #eee;">
+                                                                            <div class="container py-5">
+                                                                                <div class="row justify-content-center">
+                                                                                    <div class="col-md-8 col-lg-6 col-xl-12">
+                                                                                        <div class="card text-black">
+                                                                                            <input type="hidden"
+                                                                                                   name="id"
+                                                                                                   th:value="${category.food.id}"
+                                                                                                   class="form-control">
+                                                                                            <img style="height: 200px"
+                                                                                                 th:if="${category.food.image}"
+                                                                                                 th:src="${'/resources/uploads/'}+${category.food.image}"
+                                                                                                 class="card-img-top"/>
+                                                                                            <div class="card-body">
+                                                                                                <div class="text-center">
+                                                                                                    <h5 class="card-title"
+                                                                                                        th:text="${category.food.name}">
+                                                                                                        Believing is
+                                                                                                        seeing</h5>
+
+                                                                                                    <p class="text-muted mb-4"
+                                                                                                       th:text="${category.food.description}">
+                                                                                                        Apple pro
+                                                                                                        display
+                                                                                                        XDR</p>
+                                                                                                    <div class="modal-footer">
+                                                                                                        <button style=" width:500px"
+                                                                                                                type="submit"
+                                                                                                                class="btn btn-outline-success d-block btn-rounded"
+                                                                                                                data-mdb-ripple-color="dark">
+                                                                                                            Đặt
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </section>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--ModalOrder-->
+
+                                                    <!--ModalRequest-->
+                                                    <div class="modal fade" th:id="'idModel' + ${category.id}"
+                                                         tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <form th:action="@{/user/late-order}" method="post">
+                                                                    <section style="background-color: #eee;">
+                                                                        <div class="container py-5">
+                                                                            <div class="row justify-content-center">
+                                                                                <div class="col-md-8 col-lg-6 col-xl-12">
+                                                                                    <div class="card text-black">
+                                                                                        <input type="hidden" name="id"
+                                                                                               th:value="${category.food.id}"
+                                                                                               class="form-control">
+                                                                                        <img style="height: 200px"
+                                                                                             th:if="${category.food.image}"
+                                                                                             th:src="${'/resources/uploads/'}+${category.food.image}"
+                                                                                             class="card-img-top"/>
+                                                                                        <div class="card-body">
+                                                                                            <div class="text-center">
+                                                                                                <h5 class="card-title"
+                                                                                                    th:text="${category.food.name}">
+                                                                                                    Believing is
+                                                                                                    seeing</h5>
+
+                                                                                                <p class="text-muted mb-4"
+                                                                                                   th:text="${category.food.description}">
+                                                                                                    Apple pro display
+                                                                                                    XDR</p>
+                                                                                                <div class="form-group purple-border">
+                                                                                        <textarea
+                                                                                                placeholder="Nhập lý do đặt món muộn"
+                                                                                                class="form-control"
+                                                                                                id="exampleFormControlTextarea4"
+                                                                                                type="text"
+                                                                                                name="description"></textarea>
+                                                                                                </div>
+                                                                                                <div class="modal-footer">
+                                                                                                    <button style=" width:500px"
+                                                                                                            type="submit"
+                                                                                                            class="btn btn-outline-success d-block btn-rounded"
+                                                                                                            data-mdb-ripple-color="dark">
+                                                                                                        Đặt
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                </form>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="text-center" th:if="${session.user.role.id == 2}">
+
+                                                    <button type="button" class="btn btn-outline-dark mt-2"
+                                                            data-bs-toggle="modal"
+                                                            th:data-bs-target="'#idModelDele'+${category.id}">
+                                                        Xóa
+                                                    </button>
+                                                    <a th:href="'/user/detail/'+${category.food.id}"
+                                                       class="btn btn-outline-dark mt-2">
+                                                        Xem đánh giá
+                                                    </a>
+                                                    <div class="modal fade" th:id="'idModelDele' + ${category.id}"
+                                                         tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Bạn
+                                                                        chắc chắn
+                                                                        muốn xóa</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Món <span th:text="${category.food.name}"></span>
+                                                                    trong thực
+                                                                    đơn
+                                                                    hôm nay
+                                                                    <form th:action="@{/user/menu-delete}"
+                                                                          method="post">
+                                                                        <input type="hidden" class="form-control"
+                                                                               id="id"
+                                                                               name="id"
+                                                                               th:value="${category.id}">
+                                                                        <div class="modal-footer"
+                                                                             style="margin-top: 20px">
+                                                                            <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">
+                                                                                Close
+                                                                            </button>
+                                                                            <button type="submit"
+                                                                                    class="btn btn-danger">Xóa
+                                                                            </button>
+
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <!-- Modal Add-->
-          </div>
-          <div class="card-body">
-            <table id="datatablesSimple">
-              <thead>
-              <tr style="background-color: gray !important;">
-                <th>STT</th>
-                <th>Tên món ăn</th>
-                <th>Ảnh</th>
-                <th th:if="${session.user.role.id == 2}">Số lượng</th>
-                <th>Hoạt động</th>
-              </tr>
-              </thead>
-              <tbody>
-              <th:block th:each="category,index  : ${list}">
-                <tr>
-                  <td th:text="${index.index +1}"></td>
-                  <td th:text="${category.food.name}"></td>
-                  <td>
-                    <img height="200px" width="200px" th:if="${category.food.image}" th:src="${'/resources/uploads/'}+${category.food.image}">
-                  </td>
-                  <td th:if="${session.user.role.id == 2}" th:text="${category.quantity}"></td>
-                  <td th:if="${session.user.role.id == 2}">
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            th:data-bs-target="'#idModelDele'+${category.id}" >
-                      Xóa
-                    </button>
-                    <a th:href="'/user/detail/'+${category.food.id}" class="btn btn-info" >
-                      Xem đánh giá
-                    </a>
-                    <div class="modal fade" th:id="'idModelDele' + ${category.id}" tabindex="-1"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn xóa</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            Món  <span th:text="${category.food.name}"></span> trong thực đơn hôm nay
-                            <form th:action="@{/user/menu-delete}" method="post">
-                              <input type="hidden" class="form-control" id="id" name="id" th:value="${category.id}">
-                              <div class="modal-footer" style="margin-top: 20px">
-                                <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">
-                                  Close
-                                </button>
-                                <button type="submit" class="btn btn-danger">Xóa</button>
 
-                              </div>
-                            </form>
-                          </div>
+        </main>
 
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td th:if="${session.user.role.id == 3}">
-                    <button th:if="${checkOrder == true  }" type="button" class="btn btn-warning" data-bs-toggle="modal"
-                            th:data-bs-target="'#idModelDel'+${category.id}" >
-                      Order món ăn
-                    </button>
-                    <a  th:text="${hour}" th:href="'/user/detail/'+${category.food.id}" class="btn btn-info" >
-                      Xem đánh giá
-                    </a>
-                    <div class="modal fade" th:id="'idModelDel' + ${category.id}" tabindex="-1"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Order</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            Bạn muốn order món : <span th:text="${category.food.name}"></span>
-                            <form th:action="@{/user/menu-order}" method="post">
-                              <input type="hidden" class="form-control" id="id" name="id" th:value="${category.food.id}">
-                              <input type="hidden" class="form-control" id="idmenu" name="idmenu" th:value="${category.id}">
-                              <div class="modal-footer" style="margin-top: 20px">
-                                <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">
-                                  Close
-                                </button>
-                                <button type="submit" class="btn btn-warning">Order</button>
+        <script>
 
-                              </div>
-                            </form>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-              </th:block>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </main>
-
-    <script>
-
-      ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
-        console.log("da" + eidt);
-      })
-              .catch(error => {
-                console.error(error);
-              });
-
-    </script>
-    <script>
-
-      var dodai = document.getElementById("dodai").value;
-      var a = parseInt(dodai);
-      for(var i = 1;i<=a+10;i++){
-        var name = "#editor"  + i
-        ClassicEditor.create(document.querySelector(name)).then(eidt => {
-          console.log("da" + eidt);
-        })
+            ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
+                console.log("da" + eidt);
+            })
                 .catch(error => {
-                  console.error(error);
+                    console.error(error);
                 });
-      }
+
+        </script>
+        <script>
+
+            var dodai = document.getElementById("dodai").value;
+            var a = parseInt(dodai);
+            for (var i = 1; i <= a + 10; i++) {
+                var name = "#editor" + i
+                ClassicEditor.create(document.querySelector(name)).then(eidt => {
+                    console.log("da" + eidt);
+                })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
 
 
-    </script>
-    <footer th:replace="fragments :: footer" class="py-4 bg-light mt-auto">
+        </script>
+        <footer th:replace="fragments :: footer" class="py-4 bg-light mt-auto">
 
-    </footer>
-  </div>
+        </footer>
+    </div>
 </div>
 
 <script src="js/JQuery3.3.1.js"></script>

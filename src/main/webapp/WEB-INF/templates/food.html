@@ -54,14 +54,6 @@
                                                 <div class="row">
                                                     <div class="col-12  ">
                                                         <label for="addname"
-                                                               class="col-form-label">Giá:</label>
-                                                        <input type="number" class="form-control"
-                                                               id="addname" name="price" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12  ">
-                                                        <label for="addname"
                                                                class="col-form-label">Ảnh:</label>
                                                         <input type="file" class="form-control"
                                                                id="addname" name="file" required>
@@ -95,7 +87,6 @@
                                 <th>STT</th>
                                 <th>Tên món ăn</th>
                                 <th>Ảnh</th>
-                                <th>Giá tiền</th>
                                 <th>Mô tả</th>
                                 <th></th>
                             </tr>
@@ -108,9 +99,8 @@
                                     <td th:text="${index.index +1}"></td>
                                     <td th:text="${category.name}"></td>
                                     <td>
-                                        <img height="200px" width="200px" th:if="${category.image}" th:src="${'/resources/uploads/'}+${category.image}">
+                                        <img height="150px" width="150px" th:if="${category.image}" th:src="${'/resources/uploads/'}+${category.image}">
                                     </td>
-                                    <td th:text="${#numbers.formatCurrency(category.price)}"></td>
                                     <td>
                                         <a href="" data-bs-toggle="modal"
                                            th:data-bs-target="'#idModelDes'+${category.id}" >
@@ -204,14 +194,6 @@
                                                                        class="col-form-label">Món ăn:</label>
                                                                 <input type="text" class="form-control"
                                                                        id="addname" name="name" th:value="${category.name}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12  ">
-                                                                <label for="addname"
-                                                                       class="col-form-label">Giá:</label>
-                                                                <input type="number" class="form-control"
-                                                                       id="addname" name="price" th:value="${category.price}" required>
                                                             </div>
                                                         </div>
                                                         <div class="row">

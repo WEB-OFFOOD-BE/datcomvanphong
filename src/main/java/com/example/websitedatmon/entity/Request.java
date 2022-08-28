@@ -32,6 +32,8 @@ public class Request {
     private Byte isActive;
     @Column(name = "status")
     private Integer status;
+    @Column(name = "userid")
+    private int userId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false,updatable = false)

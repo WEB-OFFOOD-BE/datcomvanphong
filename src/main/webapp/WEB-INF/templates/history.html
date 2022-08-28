@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="en">
+<html lang="en">
 
 <head th:replace="fragments :: html_head">
 </head>
@@ -15,53 +15,220 @@
     </div>
 
     <div id="layoutSidenav_content">
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4">Lịch sử order món ăn</h1>
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <div th:if="${msg == 'success'}" class="alert alert-success">
-                            <strong>Thành công!</strong>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table id="datatablesSimple">
-                            <thead>
-                            <tr style="background-color: gray !important;">
-                                <th>STT</th>
-                                <th>Món ăn</th>
-                                <th>Ảnh</th>
-                                <th>Ngày order</th>
-                                <th>Tình trạng</th>
-                                <th>Hoạt động</th>
-                            </tr>
-                            </thead>
+<!--        <main>-->
+<!--            <div class="container-fluid px-4">-->
+<!--                <h1 class="mt-4">Lịch sử order món ăn</h1>-->
+<!--                <div class="card mb-4">-->
+<!--                    <div class="card-header">-->
+<!--                        <div th:if="${msg == 'success'}" class="alert alert-success">-->
+<!--                            <strong>Thành công!</strong>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <table id="datatablesSimple">-->
+<!--                            <thead>-->
+<!--                            <tr style="background-color: gray !important;">-->
+<!--                                <th>STT</th>-->
+<!--                                <th>Món ăn</th>-->
+<!--                                <th>Ảnh</th>-->
+<!--                                <th>Ngày order</th>-->
+<!--                                <th>Tình trạng</th>-->
+<!--                                <th>Hoạt động</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
 
-                            <tbody>
-                            <input type="hidden" th:value="${list.size()}" id="dodai" />
-                            <th:block th:each="category,index : ${list}">
-                                <tr th:if="${session.user.id == category.user.id}">
-                                    <td th:text="${index.index +1}"></td>
-                                    <td th:text="${category.food.name}"></td>
-                                    <td>
-                                        <img height="200px" width="200px" th:if="${category.food.image}" th:src="${'/resources/uploads/'}+${category.food.image}">
-                                    </td>
-                                    <td th:text="${category.created}"></td>
-                                    <td th:if="${category.status == 0}">Đang chờ xử lý</td>
-                                    <td th:if="${category.status == 1}">Đã hoàn thành</td>
-                                    <td th:if="${category.status == 2}">Đã nhận món</td>
-                                    <td th:if="${category.status == 2}">
-                                        <button th:if="${category.status == 2}" style="width: 100px" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                  th:data-bs-target="'#exampleModal'+${category.id}">
-                                        Bình luận
-                                    </button>
-                                        <button th:if="${category.status == 2}" style="width: 100px" type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                th:data-bs-target="'#exampleModalA'+${category.id}">
-                                            Hoàn trả
-                                        </button></td>
-                                </tr>
+<!--                            <tbody>-->
+<!--                            <input type="hidden" th:value="${list.size()}" id="dodai"/>-->
+<!--                            <th:block th:each="category,index : ${list}">-->
+<!--                                <tr th:if="${session.user.id == category.user.id}">-->
+<!--                                    <td th:text="${index.index +1}"></td>-->
+<!--                                    <td th:text="${category.food.name}"></td>-->
+<!--                                    <td>-->
+<!--                                        <img height="200px" width="200px" th:if="${category.food.image}"-->
+<!--                                             th:src="${'/resources/uploads/'}+${category.food.image}">-->
+<!--                                    </td>-->
+<!--                                    <td th:text="${category.created}"></td>-->
+<!--                                    <td th:if="${category.status == 0}">Đang chờ xử lý</td>-->
+<!--                                    <td th:if="${category.status == 1}">Đã hoàn thành</td>-->
+<!--                                    <td th:if="${category.status == 2}">Đã nhận món</td>-->
+<!--                                    <td th:if="${category.status == 2}">-->
+<!--                                        <button th:if="${category.status == 2}" style="width: 100px" type="button"-->
+<!--                                                class="btn btn-primary" data-bs-toggle="modal"-->
+<!--                                                th:data-bs-target="'#exampleModal'+${category.id}">-->
+<!--                                            Bình luận-->
+<!--                                        </button>-->
+<!--                                        <button th:if="${category.status == 2}" style="width: 100px" type="button"-->
+<!--                                                class="btn btn-danger" data-bs-toggle="modal"-->
+<!--                                                th:data-bs-target="'#exampleModalA'+${category.id}">-->
+<!--                                            Hoàn trả-->
+<!--                                        </button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                                &lt;!&ndash; Modal Update&ndash;&gt;-->
+<!--                                <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"-->
+<!--                                     aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                    <div class="modal-dialog">-->
+<!--                                        <div class="modal-content">-->
+<!--                                            <div class="modal-header">-->
+<!--                                                <h5 class="modal-title" id="exampleModalLabel">Đánh giá</h5>-->
+<!--                                                <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+<!--                                                        aria-label="Close"></button>-->
+<!--                                            </div>-->
+<!--                                            <div class="modal-body">-->
+<!--                                                <form th:action="@{/user/comment}" method="post"-->
+<!--                                                      enctype="multipart/form-data">-->
+<!--                                                    <input type="hidden" name="food_id" th:value="${category.food.id}"-->
+<!--                                                           class="form-control">-->
+<!--                                                    <input type="hidden" name="user_id" th:value="${category.user.id}"-->
+<!--                                                           class="form-control">-->
+<!--                                                    <div class="mb-2">-->
+<!--                                                        <label class="col-form-label">Đánh giá:</label>-->
+<!--                                                        <select class="form-control" name="rate" required>-->
+<!--                                                            <option value="" selected>Chọn số sao</option>-->
+<!--                                                            <option value="1">1 ★</option>-->
+<!--                                                            <option value="2">2 ★</option>-->
+<!--                                                            <option value="3">3 ★</option>-->
+<!--                                                            <option value="4">4 ★</option>-->
+<!--                                                            <option value="5">5 ★</option>-->
+<!--                                                        </select>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="mb-5">-->
+<!--                                                        <label class="col-form-label">Bình luận:</label>-->
+<!--                                                        <textarea class="form-control" name="content" type="text"-->
+<!--                                                                  cols="4" rows="4"></textarea>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="modal-footer">-->
+<!--                                                        <button type="button" style="width:100px"-->
+<!--                                                                class="btn btn-secondary" data-bs-dismiss="modal">Đóng-->
+<!--                                                        </button>-->
+<!--                                                        <button type="submit" style="width:100px"-->
+<!--                                                                class="btn btn-primary">Gửi-->
+<!--                                                        </button>-->
+<!--                                                    </div>-->
+<!--                                                </form>-->
+<!--                                            </div>-->
+
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; &ndash;&gt;-->
+<!--                                <div class="modal fade" th:id="'exampleModalA'+${category.id}" tabindex="-1"-->
+<!--                                     aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                    <div class="modal-dialog">-->
+<!--                                        <div class="modal-content">-->
+<!--                                            <div class="modal-header">-->
+<!--                                                <h5 class="modal-title" id="exampleModalLabel">Yêu cầu hoàn trả</h5>-->
+<!--                                                <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+<!--                                                        aria-label="Close"></button>-->
+<!--                                            </div>-->
+<!--                                            <div class="modal-body">-->
+<!--                                                <form th:action="@{/user/request-add}" method="post"-->
+<!--                                                      enctype="multipart/form-data">-->
+<!--                                                    <input type="hidden" name="id" th:value="${category.id}"-->
+<!--                                                           class="form-control">-->
+<!--                                                    <div class="col">-->
+<!--                                                        <div class="row">-->
+<!--                                                            <div class="col-12  ">-->
+<!--                                                                <label for="addname"-->
+<!--                                                                       class="col-form-label">Món ăn:</label>-->
+<!--                                                                <input type="text" class="form-control"-->
+<!--                                                                       id="addname" th:value="${category.food.name}"-->
+<!--                                                                       readonly>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="row">-->
+<!--                                                            <div class="col-12  ">-->
+<!--                                                                <label for="addname"-->
+<!--                                                                       class="col-form-label">Ảnh:</label>-->
+<!--                                                                <input type="file" class="form-control"-->
+<!--                                                                       id="addname" name="file" required>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="row">-->
+<!--                                                            <div class="col-12  ">-->
+<!--                                                                <label for="editor" class="col-form-label">Nội-->
+<!--                                                                    dung:</label>-->
+<!--                                                                <textarea class="form-control" name="description"-->
+<!--                                                                          type="text" cols="4" rows="5"></textarea>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+
+<!--                                                    <div class="modal-footer">-->
+<!--                                                        <button type="button" class="btn btn-secondary"-->
+<!--                                                                data-bs-dismiss="modal">Close-->
+<!--                                                        </button>-->
+<!--                                                        <button type="submit" class="btn btn-primary">Lưu</button>-->
+<!--                                                    </div>-->
+<!--                                                </form>-->
+<!--                                            </div>-->
+
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </th:block>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <main>-->
+                <section id="about-section" class="pt-2">
+                    <div class="container">
+                        <div class="text-center mb-2">
+                            <h3>Danh sách các món đã đặt</h3>
+                            <p class="lead">Bạn có thể xem toàn bộ yêu cầu đặt cơm của bạn ở đây</p>
+                        </div>
+                        <div>
+                            <th:block th:each="item,index : ${list}">
+
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-column flex-lg-row">
+                                            <div class="row flex-fill">
+                                                <div class="col-sm-2 text-center">
+                                                    <figure class="potoaboutwrap">
+                                                        <div class="thumb-lg member-thumb mx-auto"><img
+                                                                class="rounded-circle" height="100px" width="100px"
+                                                                th:if="${item.food.image}"
+                                                                th:src="${'/resources/uploads/'}+${item.food.image}">
+                                                        </div>
+                                                    </figure>
+                                                </div>
+                                                <div class="col text-center">
+
+                                                    <h6 class="mt-lg-5" th:text="${item.food.name}">Tên món ăn</h6>
+                                                </div>
+                                                <div class="col py-2">
+                                                    <h6>Ngày đặt món</h6>
+                                                    <h6 th:text="${item.created}">Tên món ăn</h6>
+                                                </div>
+                                                <div class="col py-2">
+                                                    <h6>Trạng thái</h6>
+                                                    <td th:if="${item.status == 0}"><h4 class="text-danger">Đang chờ xử lý</h4></td>
+                                                    <td th:if="${item.status == 1}"><h4 class="text-danger">Đã hoàn thành</h4></td>
+                                                    <td th:if="${item.status == 2}"><h4 class="text-danger">Đã nhận món</h4></td>
+                                                </div>
+                                                <div class="col ml-8">
+                                                    <br>
+<!--                                                    <a href="#" class="btn btn-primary stretched-link">Xem chi tiết</a>-->
+                                                    <button th:if="${item.status == 2}" type="button"
+                                                    class="btn btn-primary btn-rounded mr-md-3 mb-md-0 mb-2" data-bs-toggle="modal"
+                                                    th:data-bs-target="'#exampleModal'+${item.id}">
+                                                    Bình luận
+                                                    </button>
+                                                    <button th:if="${item.status == 2}" type="button"
+                                                            class="btn btn-outline-primary btn-rounded mr-md-3 mb-md-0 mb-2 " data-bs-toggle="modal"
+                                                            th:data-bs-target="'#exampleModalA'+${item.id}">
+                                                        Hoàn trả
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- Modal Update-->
-                                <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"
+                                <div class="modal fade" th:id="'exampleModal'+${item.id}" tabindex="-1"
                                      aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -71,27 +238,35 @@
                                                         aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form th:action="@{/user/comment}" method="post" enctype="multipart/form-data" >
-                                                    <input type="hidden" name="food_id" th:value="${category.food.id}" class="form-control">
-                                                    <input type="hidden" name="user_id" th:value="${category.user.id}" class="form-control">
+                                                <form th:action="@{/user/comment}" method="post"
+                                                      enctype="multipart/form-data">
+                                                    <input type="hidden" name="food_id" th:value="${item.food.id}"
+                                                           class="form-control">
+                                                    <input type="hidden" name="user_id" th:value="${item.user.id}"
+                                                           class="form-control">
                                                     <div class="mb-2">
-                                                        <label  class="col-form-label">Đánh giá:</label>
+                                                        <label class="col-form-label">Đánh giá:</label>
                                                         <select class="form-control" name="rate" required>
                                                             <option value="" selected>Chọn số sao</option>
-                                                            <option value="1" >1 ★</option>
-                                                            <option value="2" >2 ★</option>
-                                                            <option value="3" >3 ★</option>
-                                                            <option value="4" >4 ★</option>
-                                                            <option value="5" >5 ★</option>
+                                                            <option value="1">1 ★</option>
+                                                            <option value="2">2 ★</option>
+                                                            <option value="3">3 ★</option>
+                                                            <option value="4">4 ★</option>
+                                                            <option value="5">5 ★</option>
                                                         </select>
                                                     </div>
                                                     <div class="mb-5">
-                                                        <label  class="col-form-label">Bình luận:</label>
-                                                        <textarea class="form-control" name="content" type="text" cols="4" rows="4"  ></textarea>
+                                                        <label class="col-form-label">Bình luận:</label>
+                                                        <textarea class="form-control" name="content" type="text"
+                                                                  cols="4" rows="4"></textarea>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" style="width:100px" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                        <button type="submit" style="width:100px" class="btn btn-primary">Gửi</button>
+                                                        <button type="button" style="width:100px"
+                                                                class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                                        </button>
+                                                        <button type="submit" style="width:100px"
+                                                                class="btn btn-primary">Gửi
+                                                        </button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -100,7 +275,7 @@
                                     </div>
                                 </div>
                                 <!-- -->
-                                <div class="modal fade" th:id="'exampleModalA'+${category.id}" tabindex="-1"
+                                <div class="modal fade" th:id="'exampleModalA'+${item.id}" tabindex="-1"
                                      aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -110,15 +285,18 @@
                                                         aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form th:action="@{/user/request-add}" method="post" enctype="multipart/form-data">
-                                                    <input type="hidden" name="id" th:value="${category.id}" class="form-control">
+                                                <form th:action="@{/user/request-add}" method="post"
+                                                      enctype="multipart/form-data">
+                                                    <input type="hidden" name="id" th:value="${item.id}"
+                                                           class="form-control">
                                                     <div class="col">
                                                         <div class="row">
                                                             <div class="col-12  ">
                                                                 <label for="addname"
                                                                        class="col-form-label">Món ăn:</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="addname" th:value="${category.food.name}" readonly>
+                                                                       id="addname" th:value="${item.food.name}"
+                                                                       readonly>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -131,15 +309,19 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-12  ">
-                                                                <label for="editor" class="col-form-label">Nội dung:</label>
-                                                                <textarea class="form-control" name="description" type="text" cols="4" rows="5"  ></textarea>
+                                                                <label class="col-form-label">Nội
+                                                                    dung:</label>
+                                                                <textarea class="form-control" name="description"
+                                                                          type="text" cols="4" rows="5"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu </button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -148,12 +330,11 @@
                                     </div>
                                 </div>
                             </th:block>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                        </div>
 
+                    </div>
+                </section>
+            </main>
         </main>
 
         <script>
@@ -170,8 +351,8 @@
 
             var dodai = document.getElementById("dodai").value;
             var a = parseInt(dodai);
-            for(var i = 1;i<=a+10;i++){
-                var name = "#editor"  + i
+            for (var i = 1; i <= a + 10; i++) {
+                var name = "#editor" + i
                 ClassicEditor.create(document.querySelector(name)).then(eidt => {
                     console.log("da" + eidt);
                 })

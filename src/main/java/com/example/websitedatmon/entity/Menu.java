@@ -26,7 +26,7 @@ public class Menu {
     @Column(name = "quantity")
     private Integer quantity;
     @Column(name = "isActive")
-    private Byte isActive;
+    private Integer isActive;
 
     @ManyToOne
     @JoinColumn(name = "food_id", referencedColumnName = "id",insertable = false,updatable = false)

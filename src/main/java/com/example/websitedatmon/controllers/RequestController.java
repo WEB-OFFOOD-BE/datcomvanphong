@@ -1,10 +1,15 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.StatusConstants;
+import com.example.websitedatmon.entity.LateOrder;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.Request;
+import com.example.websitedatmon.entity.User;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
 import com.example.websitedatmon.serviceImpls.RequestServiceImpl;
+import com.example.websitedatmon.services.LateOrderService;
 import com.example.websitedatmon.utils.FileUtil;
+import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -27,6 +32,11 @@ public class RequestController {
 
     @Autowired
     OrderServiceImpl orderService;
+
+    @Autowired
+    LateOrderService lateOrderService;
+
+    Middleware middleware = new Middleware();
 
     @GetMapping({ "/request"})
     public ModelAndView index(String msg)
@@ -51,13 +61,35 @@ public class RequestController {
         request1.setOrders(order);
         request1.setStatus(0);
         String fileName = "";
-        try {
-            fileName = FileUtil.upload(image,request);
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if(image != null){
+            try {
+                fileName = FileUtil.upload(image,request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            request1.setImage(fileName);
+
         }
-        request1.setImage(fileName);
+
         requestService.save(request1);
+        mv.addObject("msg","success");
+        return mv;
+    }
+
+    @PostMapping(value = "/late-order")
+    public ModelAndView lateOrder(HttpServletRequest request){
+        ModelAndView mv = new ModelAndView("redirect:menu");
+        String desciption = request.getParameter("descreption");
+        int id = Integer.parseInt(request.getParameter("id"));
+        User user = middleware.middlewareUser(request);
+        LateOrder lateOrder = new LateOrder();
+        lateOrder.setFoodId(id);
+        lateOrder.setCreated(java.time.LocalDate.now());
+        lateOrder.setStatusId(StatusConstants.PROGRESSING.getValue());
+        lateOrder.setReason(desciption);
+        lateOrder.setUserId(user.getId());
+        lateOrderService.save(lateOrder);
         mv.addObject("msg","success");
         return mv;
     }

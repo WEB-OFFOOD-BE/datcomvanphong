@@ -45,14 +45,14 @@
                             <th:block th:each="category,index : ${list}">
                                 <tr>
                                     <td th:text="${index.index +1}"></td>
-                                    <td th:text="${category.order.user.fullName}"></td>
-                                    <td th:text="${category.order.user.phoneNumber}"></td>
-                                    <td th:text="${category.order.food.name}"></td>
+                                    <td th:text="${category.orders.user.fullName}"></td>
+                                    <td th:text="${category.orders.user.phoneNumber}"></td>
+                                    <td th:text="${category.orders.food.name}"></td>
                                     <td>
                                         <img height="200px" width="200px" th:if="${category.image}" th:src="${'/resources/uploads/'}+${category.image}">
                                     </td>
                                     <td th:utext="${category.description}"></td>
-                                    <td th:text="${category.createdAt}"></td>
+                                    <td th:text="${category.created}"></td>
                                     <td th:if="${category.status == 0}">Đang chờ xử lý</td>
                                     <td th:if="${category.status == 1}">Đã xử lý</td>
                                     <td>
@@ -64,9 +64,6 @@
                                     </td>
 
                                 </tr>
-
-
-
 
                                 <!-- Modal Update-->
                                 <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"

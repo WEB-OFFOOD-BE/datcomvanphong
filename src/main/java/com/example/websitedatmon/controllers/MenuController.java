@@ -66,11 +66,12 @@ public class MenuController {
         }else{
             mv.addObject("check",false);
         }
-        if(now.getHour() >= CommonConstants.START_ORDER && now.getHour() <= CommonConstants.END_ORDER){
-            mv.addObject("checkOrder",true);
-        }else{
-            mv.addObject("checkOrder",false);
-        }
+//        if(now.getHour() >= CommonConstants.START_ORDER && now.getHour() <= CommonConstants.END_ORDER){
+//            mv.addObject("checkOrder",true);
+//        }else{
+//            mv.addObject("checkOrder",false);
+//        }
+        mv.addObject("checkOrder",true);
         return mv;
     }
 
@@ -87,7 +88,9 @@ public class MenuController {
             if(check.size() == 0){
                 Food food = foodService.findFoodById(Integer.parseInt(arrId.get(i)));
                 Menu menu = new Menu();
-                menu.setFood(food);
+                menu.setFoodId(food.getId());
+                menu.setIsActive(1);
+//                menu.setFood(food);
                 menu.setDate(dateString);
                 menu.setStatus(1);
                 menuService.save(menu);
@@ -111,16 +114,11 @@ public class MenuController {
     public ModelAndView order(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
         int id = Integer.parseInt(request.getParameter("id"));
-        int idmenu = Integer.parseInt(request.getParameter("idmenu"));
-        Menu menu = menuService.findMenuById(idmenu);
-        int updatesl = menu.getQuantity() + 1;
-        menu.setQuantity(updatesl);
-        menuService.save(menu);
         Food food = foodService.findFoodById(id);
         User user = middleware.middlewareUser(request);
         Orders order = new Orders();
-        order.setFood(food);
-        order.setUser(user);
+        order.setFoodId(id);
+        order.setUserId(user.getId());
         order.setQuantity(1);
         order.setCreated(java.time.LocalDate.now().toString());
         order.setStatus(0);

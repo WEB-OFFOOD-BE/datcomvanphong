@@ -29,10 +29,10 @@ public class CommonConstants {
     public static final String VERIFY = "verify";
 
 
-    public static final int START_ADD = 21;
+    public static final int START_ADD = 0;
     public static final int END_ADD = 24;
 
 
-    public static final int START_ORDER = 21;
+    public static final int START_ORDER = 0;
     public static final int END_ORDER = 24;
 }

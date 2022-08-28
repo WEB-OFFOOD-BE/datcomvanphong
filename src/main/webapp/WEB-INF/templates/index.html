@@ -56,17 +56,17 @@
               </tr>
               </thead>
               <tbody>
-              <th:block th:each="category,index : ${listfoodorder}">
-                <tr>
-                  <td th:text="${index.index +1}"></td>
-                  <td th:text="${category[1]}"></td>
-                  <td>
-                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">
-                  </td>
-                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>
-                  <td th:text="${category[4]}"></td>
-                </tr>
-              </th:block>
+<!--              <th:block th:each="category,index : ${listfoodorder}">-->
+<!--                <tr>-->
+<!--                  <td th:text="${index.index +1}"></td>-->
+<!--                  <td th:text="${category[1]}"></td>-->
+<!--                  <td>-->
+<!--                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">-->
+<!--                  </td>-->
+<!--                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>-->
+<!--&lt;!&ndash;                  <td th:text="${category[4]}"></td>&ndash;&gt;-->
+<!--                </tr>-->
+<!--              </th:block>-->
               </tbody>
             </table>
           </div>
@@ -84,17 +84,17 @@
               </tr>
               </thead>
               <tbody>
-              <th:block th:each="category,index : ${listrequest1}">
-                <tr>
-                  <td th:text="${index.index +1}"></td>
-                  <td th:text="${category[1]}"></td>
-                  <td>
-                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">
-                  </td>
-                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>
-                  <td th:text="${category[4]}"></td>
-                </tr>
-              </th:block>
+<!--              <th:block th:each="category,index : ${listrequest1}">-->
+<!--                <tr>-->
+<!--                  <td th:text="${index.index +1}"></td>-->
+<!--                  <td th:text="${category[1]}"></td>-->
+<!--                  <td>-->
+<!--                    <img height="200px" width="200px" th:if="${category[2]}" th:src="${'/resources/uploads/'}+${category[2]}">-->
+<!--                  </td>-->
+<!--                  <td th:text="${#numbers.formatCurrency(category[3])}"></td>-->
+<!--                  <td th:text="${category[4]}"></td>-->
+<!--                </tr>-->
+<!--              </th:block>-->
               </tbody>
             </table>
           </div>
