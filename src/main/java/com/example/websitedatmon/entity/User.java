@@ -39,9 +39,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "user")
+    private List<LateOrder> lateOrders;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false,updatable = false)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Role role;
 
     public List<Orders> getOrders() {
@@ -78,6 +80,50 @@ public class User {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
+    public List<LateOrder> getLateOrders() {
+        return lateOrders;
+    }
+
+    public void setLateOrders(List<LateOrder> lateOrders) {
+        this.lateOrders = lateOrders;
     }
 
     public String getPassword() {

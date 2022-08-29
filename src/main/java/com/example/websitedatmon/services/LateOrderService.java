@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface LateOrderService {
     List<LateOrder> findAll();
 
+    List<LateOrder> findAllByStatusId(Integer statusId);
+
     <S extends LateOrder> S save(S entity);
 
     Optional<LateOrder> findById(Integer integer);

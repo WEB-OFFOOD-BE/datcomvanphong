@@ -28,14 +28,87 @@ public class Request {
     private int orderId;
     @Column(name = "image")
     private String image;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
+    }
+
     @Column(name = "isActive")
-    private Byte isActive;
+    private Integer isActive;
     @Column(name = "status")
     private Integer status;
     @Column(name = "userid")
     private int userId;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false,updatable = false)
+    @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Orders orders;
 }

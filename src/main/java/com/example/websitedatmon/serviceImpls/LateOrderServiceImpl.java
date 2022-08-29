@@ -20,6 +20,11 @@ public class LateOrderServiceImpl implements LateOrderService {
     }
 
     @Override
+    public List<LateOrder> findAllByStatusId(Integer statusId) {
+        return lateOrderRepository.findAllByStatusId(statusId);
+    }
+
+    @Override
     public <S extends LateOrder> S save(S entity) {
         return lateOrderRepository.save(entity);
     }

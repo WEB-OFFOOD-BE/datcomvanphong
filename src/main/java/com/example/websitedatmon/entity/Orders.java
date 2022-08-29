@@ -32,15 +32,95 @@ public class Orders {
     @Column(name = "quantity")
     private Integer quantity;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(Integer foodId) {
+        this.foodId = foodId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Byte getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Byte isActive) {
+        this.isActive = isActive;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<Request> requests) {
+        this.requests = requests;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     private User user;
 
     @OneToMany(mappedBy = "orders")
     private List<Request> requests;
 
     @ManyToOne
-    @JoinColumn(name = "food_id", nullable = false, insertable = false,updatable = false)
+    @JoinColumn(name = "food_id", nullable = false, insertable = false, updatable = false)
     private Food food;
 
 }

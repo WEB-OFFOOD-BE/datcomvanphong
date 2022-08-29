@@ -80,15 +80,16 @@ public class RequestController {
     @PostMapping(value = "/late-order")
     public ModelAndView lateOrder(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
-        String desciption = request.getParameter("descreption");
+        String description = request.getParameter("description");
         int id = Integer.parseInt(request.getParameter("id"));
         User user = middleware.middlewareUser(request);
         LateOrder lateOrder = new LateOrder();
         lateOrder.setFoodId(id);
         lateOrder.setCreated(java.time.LocalDate.now());
         lateOrder.setStatusId(StatusConstants.PROGRESSING.getValue());
-        lateOrder.setReason(desciption);
+        lateOrder.setReason(description);
         lateOrder.setUserId(user.getId());
+        lateOrder.setIsActive(1);
         lateOrderService.save(lateOrder);
         mv.addObject("msg","success");
         return mv;

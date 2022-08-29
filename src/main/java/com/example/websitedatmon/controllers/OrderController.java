@@ -6,6 +6,7 @@ import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
+import com.example.websitedatmon.services.LateOrderService;
 import com.example.websitedatmon.services.RequestService;
 import com.example.websitedatmon.utils.MailUtil;
 import com.example.websitedatmon.utils.Middleware;
@@ -43,6 +44,9 @@ public class OrderController {
     @Autowired
     TimeOutRepository timeOutRepository;
 
+    @Autowired
+    LateOrderService lateOrderService;
+
     Middleware middleware = new Middleware();
 
     @GetMapping({"/order"})
@@ -76,6 +80,17 @@ public class OrderController {
         var food = foodService.findFoodById(first.getFoodId());
         mv.addObject("msg", msg);
         mv.addObject("first", food);
+        return mv;
+    }
+
+    @GetMapping({"/late-order"})
+    public ModelAndView lateOrder(String msg) {
+        ModelAndView mv = new ModelAndView("lateOrder");
+        Sort sort = Sort.by("id").descending();
+        List<LateOrder> list = lateOrderService.findAllByStatusId(1);
+//        var food = foodService.findFoodById(first.getFoodId());
+        mv.addObject("msg", msg);
+        mv.addObject("first", list);
         return mv;
     }
 
