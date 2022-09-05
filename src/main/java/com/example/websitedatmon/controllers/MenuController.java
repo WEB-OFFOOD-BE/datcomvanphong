@@ -1,11 +1,13 @@
 package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.constans.CommonConstants;
+import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.Menu;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.User;
 import com.example.websitedatmon.repositorys.OrderRepository;
+import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
@@ -44,6 +46,8 @@ public class MenuController {
 
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    TimeOutRepository timeOutRepository;
 
     @Autowired
     public JavaMailSenderImpl javaMailSenderImpl;
@@ -70,12 +74,14 @@ public class MenuController {
         }else{
             mv.addObject("check",false);
         }
-//        if(now.getHour() >= CommonConstants.START_ORDER && now.getHour() <= CommonConstants.END_ORDER){
-//            mv.addObject("checkOrder",true);
-//        }else{
-//            mv.addObject("checkOrder",false);
-//        }
-        mv.addObject("checkOrder",true);
+
+        var timeOut = timeOutRepository.findById(TimeOutConstants.ORDER.getValue()).orElse(null);
+        if(now.getHour() >= timeOut.getStartTime() && now.getHour() <= timeOut.getEndTime()){
+            mv.addObject("checkOrder",true);
+        }else{
+            mv.addObject("checkOrder",false);
+        }
+//        mv.addObject("checkOrder",true);
         return mv;
     }
 

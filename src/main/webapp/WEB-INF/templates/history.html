@@ -213,12 +213,12 @@
                                                     <br>
 <!--                                                    <a href="#" class="btn btn-primary stretched-link">Xem chi tiết</a>-->
                                                     <button th:if="${item.status == 2}" type="button"
-                                                    class="btn btn-primary btn-rounded mr-md-3 mb-md-0 mb-2" data-bs-toggle="modal"
+                                                    class="btn btn-primary btn-rounded mb-2" data-bs-toggle="modal"
                                                     th:data-bs-target="'#exampleModal'+${item.id}">
-                                                    Bình luận
+                                                    Chấm điểm
                                                     </button>
                                                     <button th:if="${item.status == 2}" type="button"
-                                                            class="btn btn-outline-primary btn-rounded mr-md-3 mb-md-0 mb-2 " data-bs-toggle="modal"
+                                                            class="btn btn-outline-primary btn-rounded" data-bs-toggle="modal"
                                                             th:data-bs-target="'#exampleModalA'+${item.id}">
                                                         Hoàn trả
                                                     </button>
@@ -242,7 +242,9 @@
                                                       enctype="multipart/form-data">
                                                     <input type="hidden" name="food_id" th:value="${item.food.id}"
                                                            class="form-control">
-                                                    <input type="hidden" name="user_id" th:value="${item.user.id}"
+                                                    <input type="hidden" name="food_id" th:value="${item.food.id}"
+                                                           class="form-control">
+                                                    <input type="hidden" name="order_id" th:value="${item.id}"
                                                            class="form-control">
                                                     <div class="mb-2">
                                                         <label class="col-form-label">Đánh giá:</label>
@@ -254,11 +256,6 @@
                                                             <option value="4">4 ★</option>
                                                             <option value="5">5 ★</option>
                                                         </select>
-                                                    </div>
-                                                    <div class="mb-5">
-                                                        <label class="col-form-label">Bình luận:</label>
-                                                        <textarea class="form-control" name="content" type="text"
-                                                                  cols="4" rows="4"></textarea>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" style="width:100px"

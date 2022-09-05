@@ -23,11 +23,13 @@ public class Comment {
     @Column(name = "created_at")
     private String createdAt;
     @Column(name = "food_id")
-    private int foodId;
+    private Integer foodId;
     @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "order_id")
+    private Integer orderId;
     @Column(name = "isActive")
-    private Byte isActive;
+    private Integer isActive;
 
     public Integer getId() {
         return id;
@@ -69,11 +71,11 @@ public class Comment {
         this.userId = userId;
     }
 
-    public Byte getIsActive() {
+    public Integer getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Byte isActive) {
+    public void setIsActive(Integer isActive) {
         this.isActive = isActive;
     }
 
