@@ -1,5 +1,6 @@
 package com.example.websitedatmon.repositorys;
 
+import com.example.websitedatmon.entity.Menu;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.User;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     Orders save(Orders order);
     void deleteById(int id);
 
+    List<Orders> findOrderByUserIdAndCreated(Integer userId, String date);
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE `orders` SET status = 1 WHERE food_id = ? AND created = ?",nativeQuery = true)
@@ -36,4 +39,6 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query(value = "SELECT a.food_id as 'foodid', b.name as 'name', b.image as 'image', COUNT(a.food_id) as 'soluonghoantra' FROM `orders` as a, `food` as b, `request` as c WHERE a.food_id = b.id AND c.order_id = a.id GROUP BY a.food_id",nativeQuery = true)
     List<Object[]> listRequest();
 
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND user_id = ?",nativeQuery = true)
+    List<Orders> getToday(int userid);
 }

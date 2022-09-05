@@ -24,8 +24,8 @@
                         <div th:if="${msg == 'success'}" class="alert alert-success">
                             <strong>Thành công!</strong>
                         </div>
-                        <div th:if="${msg == 'fail'}" class="alert alert-danger">
-                            <strong> Món ăn đã được thêm vào thực đơn hôm nay!</strong>
+                        <div th:if="${msg == 'failed'}" class="alert alert-danger">
+                            <strong>Bạn đã đặt cơm cho ngày mai!</strong>
                         </div>
                         <div class="btn-group" >
                             <button th:if="${session.user.role.id == 2 && check == true  }" type="button"

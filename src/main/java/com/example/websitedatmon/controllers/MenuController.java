@@ -5,6 +5,7 @@ import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.Menu;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.User;
+import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
@@ -40,6 +41,9 @@ public class MenuController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    OrderRepository orderRepository;
 
     @Autowired
     public JavaMailSenderImpl javaMailSenderImpl;
@@ -113,17 +117,20 @@ public class MenuController {
     @PostMapping(value = "/menu-order")
     public ModelAndView order(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
-        int id = Integer.parseInt(request.getParameter("id"));
-        Food food = foodService.findFoodById(id);
         User user = middleware.middlewareUser(request);
-        Orders order = new Orders();
-        order.setFoodId(id);
-        order.setUserId(user.getId());
-        order.setQuantity(1);
-        order.setCreated(java.time.LocalDate.now().toString());
-        order.setStatus(0);
-        orderService.save(order);
-        mv.addObject("msg","success");
+        var orderCheck = orderRepository.getToday(user.getId());
+        if (orderCheck.size() == 0){
+            int id = Integer.parseInt(request.getParameter("id"));
+            Orders order = new Orders();
+            order.setFoodId(id);
+            order.setUserId(user.getId());
+            order.setQuantity(1);
+            order.setCreated(java.time.LocalDate.now().toString());
+            order.setStatus(0);
+            orderService.save(order);
+            mv.addObject("msg","success");
+        }
+        mv.addObject("msg","failed");
         return mv;
     }
 

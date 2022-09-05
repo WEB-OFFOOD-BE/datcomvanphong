@@ -71,26 +71,26 @@ public class OrderController {
         return mv;
     }
 
-    @GetMapping({"/current-order"})
-    public ModelAndView currentOrder(String msg) {
-        ModelAndView mv = new ModelAndView("current");
-        Sort sort = Sort.by("id").descending();
-        List<Orders> list = orderService.findAll(sort);
-        Orders first = list.get(0);
-        var food = foodService.findFoodById(first.getFoodId());
-        mv.addObject("msg", msg);
-        mv.addObject("first", food);
-        return mv;
-    }
+//    @GetMapping({"/current-order"})
+//    public ModelAndView currentOrder(String msg) {
+//        ModelAndView mv = new ModelAndView("current");
+//        Sort sort = Sort.by("id").descending();
+//        List<Orders> list = orderService.findAll(sort);
+//        Orders first = list.get(0);
+//        var food = foodService.findFoodById(first.getFoodId());
+//        mv.addObject("msg", msg);
+//        mv.addObject("first", food);
+//        return mv;
+//    }
 
     @GetMapping({"/late-order"})
     public ModelAndView lateOrder(String msg) {
-        ModelAndView mv = new ModelAndView("lateOrder");
+        ModelAndView mv = new ModelAndView("lateOrders");
         Sort sort = Sort.by("id").descending();
         List<LateOrder> list = lateOrderService.findAllByStatusId(1);
 //        var food = foodService.findFoodById(first.getFoodId());
         mv.addObject("msg", msg);
-        mv.addObject("first", list);
+        mv.addObject("myRequests", list);
         return mv;
     }
 
