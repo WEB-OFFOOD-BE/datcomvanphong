@@ -119,11 +119,10 @@
                                                        th:if="${checkOrder == true}"
                                                     >Đặt món</a>
 
-                                                    <a class="btn btn-outline-dark mt-2" data-bs-toggle="modal"
-                                                       th:data-bs-target="'#idModelDel'+${category.id} "
-                                                       th:if="${checkOrder == true}"
-                                                       th:text="${category.food.avgRate} + '★'"></a>
+                                                    <a class="btn btn-outline-dark mt-2"
+                                                       th:href="'/user/detail/'+${category.food.id}"
 
+                                                       th:text="${category.food.avgRate} + '★'"></a>
 
                                                     <!--ModalOrder-->
                                                     <div class="modal fade" th:id="'idModelDel' + ${category.id}"

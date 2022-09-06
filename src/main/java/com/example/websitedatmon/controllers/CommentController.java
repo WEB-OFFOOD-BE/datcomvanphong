@@ -1,18 +1,23 @@
 package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.entity.Comment;
+import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.User;
+import com.example.websitedatmon.repositorys.CommentRepository;
 import com.example.websitedatmon.services.CommentService;
 import com.example.websitedatmon.services.FoodService;
 import com.example.websitedatmon.services.UserService;
 import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -20,6 +25,9 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Autowired
     FoodService foodService;
@@ -57,6 +65,22 @@ public class CommentController {
         comment.setIsActive(1);
         commentService.save(comment);
         mv.addObject("msg","success");
+        return mv;
+    }
+
+    @GetMapping(value = "/comment/{foodId}")
+    public ModelAndView detail(@PathVariable int foodId){
+        ModelAndView mv = new ModelAndView("detail");
+        Food obj = foodService.findFoodById(foodId);
+        List<Comment> listC = commentService.findCommentByFood(obj);
+        float sum = 0;
+        for(int i = 0;i < listC.size();i++){
+            sum = sum + listC.get(i).getRate();
+        }
+        float ave = (float)(sum/ listC.size());
+        mv.addObject("food",obj);
+        mv.addObject("listC",listC);
+        mv.addObject("ave",ave);
         return mv;
     }
 

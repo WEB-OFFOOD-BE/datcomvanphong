@@ -29,15 +29,11 @@
                                     <label  class="col-form-label">Món ăn:</label>
                                     <p th:text="${food.name}"></p>
                                 </div>
-                                <div class="">
-                                    <label  class="col-form-label">Giá tiền:</label>
-                                    <p th:text="${#numbers.formatCurrency(food.price)}"></p>
-                                </div>
                             </div>
                             <div class="col-4">
                                 <div class="">
                                     <label  class="col-form-label">Trung bình số sao đánh giá:</label>
-                                    <p><span th:if="${ave != null}" th:text="${#numbers.formatDecimal(ave,1,1)}"></span>/5 ★</p>
+                                    <p><span th:if="${food.avgRate != null}" th:text="${#numbers.formatDecimal(food.avgRate,1,1)}"></span>/5 ★</p>
                                 </div>
                                 <div class="">
                                     <label  class="col-form-label">Mô tả:</label>
@@ -54,7 +50,6 @@
                                 <th>STT</th>
                                 <th>Nhân viên</th>
                                 <th>Số sao</th>
-                                <th>Bình luận</th>
                                 <th>Ngày bình luận</th>
                             </tr>
                             </thead>
@@ -70,7 +65,6 @@
                                     <td th:text="${index.index +1}"></td>
                                     <td th:text="${category.user.fullName}"></td>
                                     <td th:text="${category.rate} + ' ★'"></td>
-                                    <td th:text="${category.content}"></td>
                                     <td th:text="${category.createdAt}"></td>
                                 </tr>
                             </th:block>

@@ -12,4 +12,5 @@ public interface CommentRepository extends JpaRepository<Comment,Integer> {
     Comment save(Comment comment);
     List<Comment> findCommentByFood(Food food);
     Comment findCommentByOrderId(Integer orderId);
+    Comment findCommentByFoodId(Integer foodId);
 }
