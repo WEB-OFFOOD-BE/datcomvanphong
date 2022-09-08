@@ -11,6 +11,7 @@ public interface UserService {
     User findUserById(int id);
 
     User findUserByEmail(String email);
+    
     User findUserByEmailAndPassword(String email,String password);
     User findUserByUserNameAndPassword(String userName,String password);
     int delete(int id);

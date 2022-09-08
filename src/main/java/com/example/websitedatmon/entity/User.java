@@ -1,9 +1,6 @@
 package com.example.websitedatmon.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -42,7 +39,24 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Feedback> feedbacks;
 
+
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false,updatable = false)
     private Role role;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -32,6 +32,7 @@ public class FoodController {
     @GetMapping({ "/food"})
     public ModelAndView index(String msg)
     {
+
         List<Food> list = foodService.findAll();
         ModelAndView mv = new ModelAndView("food");
         mv.addObject("msg",msg);
@@ -47,6 +48,7 @@ public class FoodController {
         String desciption = request.getParameter("description");
         Food food = new Food();
         food.setName(name);
+
         food.setDescription(desciption);
         food.setCreated(java.time.LocalDate.now());
         String fileName = "";
