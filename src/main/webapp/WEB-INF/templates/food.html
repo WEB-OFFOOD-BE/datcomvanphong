@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="en">
+<html lang="en">
 
 <head th:replace="fragments :: html_head">
 </head>
@@ -61,16 +61,18 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12  ">
-                                                        <label for="editor" class="col-form-label">Mô tả:</label>
-                                                        <textarea name="description" id="editor" cols="30"
-                                                                  rows="30"></textarea>
+                                                        <label class="col-form-label">Mô tả:</label>
+                                                        <textarea class="form-control" name="description"
+                                                                  rows="3"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Lưu </button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Lưu</button>
                                             </div>
                                         </form>
                                     </div>
@@ -81,98 +83,36 @@
                         <!-- Modal Add-->
                     </div>
                     <div class="card-body">
-                        <table id="datatablesSimple">
-                            <thead>
-                            <tr style="background-color: gray !important;">
-                                <th>STT</th>
-                                <th>Tên món ăn</th>
-                                <th>Ảnh</th>
-                                <th>Mô tả</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <input type="hidden" th:value="${list.size()}" id="dodai" />
+                        <div class="row">
+                            <input type="hidden" th:value="${list.size()}" id="dodai"/>
                             <th:block th:each="category,index : ${list}">
-                                <tr>
-                                    <td th:text="${index.index +1}"></td>
-                                    <td th:text="${category.name}"></td>
-                                    <td>
-                                        <img height="150px" width="150px" th:if="${category.image}" th:src="${'/resources/uploads/'}+${category.image}">
-                                    </td>
-                                    <td>
-                                        <a href="" data-bs-toggle="modal"
-                                           th:data-bs-target="'#idModelDes'+${category.id}" >
-                                            Xem
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                th:data-bs-target="'#exampleModal'+${category.id}">
-                                            Sửa
-                                        </button>
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                th:data-bs-target="'#idModelDel'+${category.id}" >
-                                            Xóa
-                                        </button>
-                                        <div class="modal fade" th:id="'idModelDes' + ${category.id}" tabindex="-1"
-                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel"><span th:text="${category.name}" ></span></h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="" method="post">
-                                                            <p th:utext="${category.description}"></p>
-                                                            <div class="modal-footer" style="margin-top: 20px">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
-                                                </div>
-                                            </div>
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card">
+                                        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                             data-mdb-ripple-color="light">
+                                            <img th:if="${category.image}"
+                                                 th:src="${'/resources/uploads/'}+${category.image}"
+                                                 height="250px" width="100%"/>
                                         </div>
-                                        <div class="modal fade" th:id="'idModelDel' + ${category.id}" tabindex="-1"
-                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn xóa ?</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Món ăn : <span th:text="${category.name}"></span>
-                                                        <form th:action="@{/user/food-delete}" method="post">
-                                                            <input type="hidden" class="form-control" id="id" name="id" th:value="${category.id}">
-                                                            <div class="modal-footer" style="margin-top: 20px">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                                <button type="submit" class="btn btn-danger">Xóa</button>
-
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
-                                                </div>
-                                            </div>
+                                        <div class="card-body">
+                                            <a href="" class="text-reset">
+                                                <h5 class="card-title mb-3" th:text="${category.name}">Product
+                                                    name</h5>
+                                            </a>
+                                            <a href="" class="text-reset">
+                                                <p th:text="${category.description}">Category</p>
+                                            </a>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    th:data-bs-target="'#exampleModal'+${category.id}">
+                                                Sửa
+                                            </button>
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    th:data-bs-target="'#idModelDel'+${category.id}">
+                                                Xóa
+                                            </button>
                                         </div>
-                                    </td>
-
-                                </tr>
-
-
-
+                                    </div>
+                                </div>
 
                                 <!-- Modal Update-->
                                 <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"
@@ -185,7 +125,8 @@
                                                         aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form enctype="multipart/form-data" th:action="@{/user/food-update}" method="post">
+                                                <form enctype="multipart/form-data" th:action="@{/user/food-update}"
+                                                      method="post">
                                                     <input type="hidden" th:value="${category.id}" name="id">
                                                     <div class="col">
                                                         <div class="row">
@@ -193,7 +134,8 @@
                                                                 <label for="addname"
                                                                        class="col-form-label">Món ăn:</label>
                                                                 <input type="text" class="form-control"
-                                                                       id="addname" name="name" th:value="${category.name}">
+                                                                       id="addname" name="name"
+                                                                       th:value="${category.name}">
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -201,40 +143,38 @@
                                                                 <label for="addname"
                                                                        class="col-form-label">Ảnh:</label>
                                                                 <input type="file" class="form-control"
+                                                                       th:value="${category.image}"
                                                                        id="addname" name="file">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-12  ">
-                                                                <label for="editor" class="col-form-label">Mô tả:</label>
-                                                                <textarea name="description" th:id="'editor'+${category.id}" cols="30"
-                                                                          rows="30" th:text="${category.description}"></textarea>
+                                                                <label class="col-form-label">Mô
+                                                                    tả:</label>
+                                                                <textarea name="description"
+                                                                          th:id="${category.id}"
+                                                                          class="form-control"
+                                                                          id="exampleFormControlTextarea1"
+                                                                          th:text="${category.description}"></textarea>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                                <button type="submit" class="btn btn-primary">Lưu</button>
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Lưu</button>
-                                                    </div>
                                                 </form>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Modal Update-->
-
                             </th:block>
-                            </tbody>
-                        </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </main>
-
         <script>
 
             ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
@@ -249,8 +189,8 @@
 
             var dodai = document.getElementById("dodai").value;
             var a = parseInt(dodai);
-            for(var i = 1;i<=a+10;i++){
-                var name = "#editor"  + i
+            for (var i = 1; i <= a + 10; i++) {
+                var name = "#editor" + i
                 ClassicEditor.create(document.querySelector(name)).then(eidt => {
                     console.log("da" + eidt);
                 })

@@ -46,6 +46,7 @@ public class MenuController {
 
     @Autowired
     OrderRepository orderRepository;
+
     @Autowired
     TimeOutRepository timeOutRepository;
 
@@ -85,27 +86,47 @@ public class MenuController {
         return mv;
     }
 
+//    @PostMapping(value = "/menu-add")
+//    public ModelAndView add(HttpServletRequest request , @RequestParam(value = "items[]") List<String> arrId){
+//        ModelAndView mv = new ModelAndView("redirect:menu");
+//        Date today = new Date();
+//        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+//        String dateString  = LocalDate.ofInstant(tomorrow.toInstant(), ZoneId.systemDefault()).toString();
+//
+//        for (int i = 0; i < arrId.size(); i++) {
+//            List<Menu> check = menuService.findMenued(Integer.parseInt(arrId.get(i)),dateString);
+//            if(check.size() == 0){
+//                Food food = foodService.findFoodById(Integer.parseInt(arrId.get(i)));
+//                Menu menu = new Menu();
+//                menu.setFoodId(food.getId());
+//                menu.setIsActive(1);
+////                menu.setFood(food);
+//                menu.setDate(dateString);
+//                menu.setStatus(1);
+//                menuService.save(menu);
+//            }
+//        }
+//        mv.addObject("msg","success");
+//        return mv;
+//    }
+
     @PostMapping(value = "/menu-add")
-    public ModelAndView add(HttpServletRequest request , @RequestParam(value = "items[]") List<String> arrId){
+    public ModelAndView addFood(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
         Date today = new Date();
-        String quantity = "0";
         Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
         String dateString  = LocalDate.ofInstant(tomorrow.toInstant(), ZoneId.systemDefault()).toString();
-
-        for (int i = 0; i < arrId.size(); i++) {
-            List<Menu> check = menuService.findMenued(Integer.parseInt(arrId.get(i)),dateString);
+        String foodId = request.getParameter("foodId");
+            List<Menu> check = menuService.findMenued(Integer.parseInt(foodId),dateString);
             if(check.size() == 0){
-                Food food = foodService.findFoodById(Integer.parseInt(arrId.get(i)));
+                Food food = foodService.findFoodById(Integer.parseInt(foodId));
                 Menu menu = new Menu();
                 menu.setFoodId(food.getId());
                 menu.setIsActive(1);
-//                menu.setFood(food);
                 menu.setDate(dateString);
                 menu.setStatus(1);
                 menuService.save(menu);
             }
-        }
         mv.addObject("msg","success");
         return mv;
     }

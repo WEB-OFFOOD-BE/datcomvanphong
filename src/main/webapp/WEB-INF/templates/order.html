@@ -42,7 +42,7 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col-12  ">
-                                                        <label for="addname"
+                                                        <label
                                                                class="col-form-label">Món ăn:</label>
                                                         <select class="form-control" name="id" required>
                                                             <option value="" selected >-- Chọn món ăn --</option>
@@ -52,7 +52,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-12  ">
-                                                        <label for="addname"
+                                                        <label
                                                                class="col-form-label">Tình trạng:</label>
                                                         <select class="form-control" name="status" required>
                                                             <option value="" selected >-- Chọn tình trạng --</option>
@@ -99,11 +99,11 @@
                                         <img height="200px" width="200px" th:if="${category.food.image}" th:src="${'/resources/uploads/'}+${category.food.image}">
                                     </td>
                                     <td th:text="${category.created}"></td>
-                                    <td th:if="${category.status == 0}">Đang chờ xử lý</td>
-                                    <td th:if="${category.status == 1}">Đã hoàn thành</td>
-                                    <td th:if="${category.status == 2}">Đã nhận món</td>
+                                    <td th:if="${category.status == 1}">Đang chờ xử lý</td>
+                                    <td th:if="${category.status == 2}">Đã hoàn thành</td>
+                                    <td th:if="${category.status == 3}">Đã nhận món</td>
                                     <td>
-                                        <button th:if="${category.status == 1}" style="width: 100px" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        <button th:if="${category.status == 2}" style="width: 100px" type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                 th:data-bs-target="'#exampleModal'+${category.id}">
                                             Cập nhập
                                         </button>
@@ -127,7 +127,7 @@
                                                         <label  class="col-form-label">Tình trạng:</label>
                                                         <select class="form-control" name="status" required>
                                                             <option value="" selected >-- Chọn tình trạng --</option>
-                                                            <option value="2" th:if="${category.status == 1}"  >Đã nhận món</option>
+                                                            <option value="2" th:if="${category.status == 2}"  >Đã nhận món</option>
                                                         </select>
 
                                                     </div>

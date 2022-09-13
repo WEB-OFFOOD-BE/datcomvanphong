@@ -2,12 +2,15 @@ package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
+import com.example.websitedatmon.model.EmployeeInfo;
+import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
 import com.example.websitedatmon.services.LateOrderService;
 import com.example.websitedatmon.services.RequestService;
+import com.example.websitedatmon.services.UserService;
 import com.example.websitedatmon.utils.MailUtil;
 import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,6 +50,12 @@ public class OrderController {
 
     @Autowired
     LateOrderService lateOrderService;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    UserService userService;
 
     Middleware middleware = new Middleware();
 
@@ -140,6 +150,37 @@ public class OrderController {
         ModelAndView mv = new ModelAndView("timeOut");
         mv.addObject("msg", msg);
         mv.addObject("timeOut", timeOut);
+        return mv;
+    }
+
+    @GetMapping({"/result/{userId}"})
+    public ModelAndView getToday(String msg, String msgUser, @PathVariable int userId) {
+        User obj = userService.findUserById(userId);
+        ModelAndView mv = new ModelAndView();
+        if (obj == null) {
+            msg = "failed";
+            mv.addObject("msg", msg);
+            mv = new ModelAndView("checkId");
+            return mv;
+        } else {
+            msgUser = "user";
+            var orderCheck = orderRepository.getToday(obj.getId());
+            if (orderCheck.size() == 0) {
+                msg = "notyet";
+            } else {
+                var order1 = orderCheck.stream().findFirst().orElse(null);
+                var food = foodService.findFoodById(order1.getFoodId());
+//                EmployeeInfo order = EmployeeInfo.builder()
+//                        .user(obj)
+//                        .food(food)
+//                        .build();
+                mv.addObject("order", order1);
+                msg = "ok";
+            }
+        }
+        mv = new ModelAndView("result");
+        mv.addObject("msg", msg);
+        mv.addObject("msgUser", msgUser);
         return mv;
     }
 

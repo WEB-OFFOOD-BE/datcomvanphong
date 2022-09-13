@@ -12,21 +12,33 @@
 <div id="layoutSidenav">
     <div th:replace="fragments :: html_menu" id="layoutSidenav_nav">
     </div>
-    <div id="layoutSidenav_content">
-        <div class="bg-success text-white" style="Height: 100%">
-            <div class="row">
-                <div class="col-sm">
-                    <img class="rounded-circle mt-5" height="250px" width="250px" th:if="${session.user.image}"
-                         th:src="${'/resources/uploads/'}+${session.user.image}">
+    <div id="layoutSidenav_content" th:if="${session.user.role.id == 2}">
+            <div class="row" th:if="${msgUser == 'user'}">
+                <div class="col" th:if="${msg == 'ok'}">
+                    <img class="rounded-circle mt-5" height="250px" width="250px" th:if="${order.user.image}"
+                         th:src="${'/resources/uploads/'}+${order.user.image}">
                 </div>
-                <div class="col-sm">
-                    <h1 class="masthead-heading text-uppercase mt-5" th:text="${session.user.fullName}">Start
+                <div class="col text-center" th:if="${msg == 'ok'}">
+                    <h1 class="masthead-heading text-uppercase mt-5" th:text="${order.user.fullName}">Start
                         Bootstrap</h1>
-                    <h3 class="masthead-heading text-uppercase mt-5" th:text="${session.user.fullName}">Start
+                    <h3 class="masthead-heading text-uppercase mt-5" th:text="${order.food.name}">Start
                         Bootstrap</h3>
                 </div>
+                <div class="col" th:if="${msg == 'ok'}">
+                    <img class="mt-5" height="250px" width="250px" th:if="${order.food.image}"
+                         th:src="${'/resources/uploads/'}+${order.food.image}">
+                </div>
+
+                <div class="" th:if="${msg == 'notyet'}">
+                    <h1 class="masthead-heading text-uppercase mt-5" th:text="${order.user.fullName}">Start
+                        Bootstrap</h1>
+                    <h3 class="masthead-heading mt-5">Bạn chưa order trong món của hôm nay</h3>
+
+                </div>
             </div>
-        </div>
+
+
+
     </div>
 </div>
 

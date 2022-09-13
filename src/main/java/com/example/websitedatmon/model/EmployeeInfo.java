@@ -1,6 +1,8 @@
 package com.example.websitedatmon.model;
 
+import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.Orders;
+import com.example.websitedatmon.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class EmployeeInfo {
-    String name;
-    String phoneNumber;
+    User user;
     LocalDate orderDate;
-    Orders order;
+    Food food;
 }

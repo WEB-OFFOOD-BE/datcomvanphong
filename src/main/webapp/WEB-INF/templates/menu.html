@@ -27,20 +27,21 @@
                         <div th:if="${msg == 'failed'}" class="alert alert-danger">
                             <strong>Bạn đã đặt món rồi!</strong>
                         </div>
-                        <div class="btn-group" >
-                            <button th:if="${session.user.role.id == 2 && check == true  }" type="button"
-                                    class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalAdd">
-                                Thêm món ăn
-                            </button>
-                            <div>
-                                <form class="" th:if="${session.user.role.id == 2 && check == true  }" th:action="@{/user/send-mail}"
-                                      method="post">
-                                    <button type="submit" class="btn btn-info m-6">
-                                        Gửi thông báo
-                                    </button>
-                                </form>
-                            </div>
+                        <div class="btn-group" th:if="${session.user.role.id == 2 && check == true  }">
+
+                            <form class=""
+                                  th:action="@{/user/send-mail}"
+                                  method="post">
+                                <button type="button"
+                                        class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModalAdd">
+                                    Thêm món ăn
+                                </button>
+
+                                <button type="submit" class="btn btn-info m-6">
+                                    Gửi thông báo
+                                </button>
+                            </form>
 
                         </div>
                         <!-- Modal Add-->
@@ -54,36 +55,58 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
+                                        <div class="d-flex justify-content-end">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                        <hr>
                                         <form th:action="@{/user/menu-add}" method="post" enctype="multipart/form-data">
-                                            <div class="row">
-                                                <div th:if="${checkSize != 0}" class="col-12">
-
-                                                    <label for=""
-                                                           class="col-form-label">Món ăn:</label>
-                                                    <select class="form-control" name="items[]" multiple required>
-                                                        <option value="0">-- Chọn món ăn --</option>
+                                                <div th:if="${checkSize != 0}">
+                                                    <div class="row">
                                                         <th:block th:each="food,index : ${listF}">
-                                                            <option th:value="${food.id}"
-                                                                    th:text="${food.name}"></option>
+                                                            <div class="col-3 col-md-6 mb-4" name="items[]">
+                                                                <div class="card">
+                                                                    <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                                                         data-mdb-ripple-color="light">
+                                                                        <div class="hover-zoom">
+                                                                            <img class="h-150" height="200px"
+                                                                                 width="100%"
+                                                                                 th:if="${food.image}"
+                                                                                 th:src="${'/resources/uploads/'}+${food.image}"
+                                                                                 alt="">
+                                                                        </div>
+                                                                        <img class="w-100"/>
+                                                                        <div class="mask">
+                                                                            <div class="d-flex justify-content-start align-items-end h-100"></div>
+                                                                        </div>
+                                                                        <div class="hover-overlay">
+                                                                            <div class="mask"
+                                                                                 style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <h5 class="card-title mb-3"
+                                                                            th:text="${food.name}">Product name</h5>
+                                                                        <input type="hidden" name="foodId"
+                                                                               th:value="${food.id}">
+                                                                        <p th:text="${food.description}">Category</p>
+                                                                        <p th:text="${food.avgRate}  + '★'">Category</p>
+                                                                        <button th:if="${checkSize != 0}" type="submit"
+                                                                                class="btn btn-outline-dark">
+                                                                            Lưu
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </th:block>
-                                                    </select>
+                                                    </div>
                                                 </div>
                                                 <div th:if="${checkSize == 0}" class="col-12">
 
                                                     <label
-                                                           class="col-form-label">Đã hết món ăn trong hệ thống</label>
-
+                                                            class="col-form-label">Đã hết món ăn trong hệ thống</label>
                                                 </div>
-                                            </div>
-
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    Close
-                                                </button>
-                                                <button th:if="${checkSize != 0}" type="submit" class="btn btn-primary">
-                                                    Lưu
-                                                </button>
-                                            </div>
                                         </form>
                                     </div>
 
@@ -98,7 +121,7 @@
                                     <div class="col mb-4">
                                         <div class="card h-150">
                                             <div class="hover-zoom">
-                                                <img class="h-150" height="200px" width="200px"
+                                                <img class="h-150" height="200px" width="100%"
                                                      th:if="${category.food.image}"
                                                      th:src="${'/resources/uploads/'}+${category.food.image}" alt="">
                                             </div>
@@ -215,7 +238,7 @@
                                                                                                 class="form-control"
                                                                                                 id="exampleFormControlTextarea4"
                                                                                                 type="text"
-                                                                                                name="description" ></textarea>
+                                                                                                name="description"></textarea>
                                                                                                 </div>
                                                                                                 <div class="modal-footer">
                                                                                                     <button style=" width:500px"

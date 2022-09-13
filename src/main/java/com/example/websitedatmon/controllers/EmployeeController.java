@@ -56,16 +56,16 @@ public class EmployeeController {
         return mv;
     }
 
-    @GetMapping({ "/result"})
-    public ModelAndView checkId(String msg,HttpServletRequest request)
-    {
-        ModelAndView mv = new ModelAndView("result");
-//        int id = Integer.parseInt(request.getParameter("id"));
-//        var emp = userService.findUserById(id);
-//        mv.addObject("emp",emp);
-        mv.addObject("msg",msg);
-        return mv;
-    }
+//    @GetMapping({ "/result"})
+//    public ModelAndView checkId(String msg,HttpServletRequest request)
+//    {
+//        ModelAndView mv = new ModelAndView("result");
+////        int id = Integer.parseInt(request.getParameter("id"));
+////        var emp = userService.findUserById(id);
+////        mv.addObject("emp",emp);
+//        mv.addObject("msg",msg);
+//        return mv;
+//    }
 
     @PostMapping(value = "/employee-add")
     public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
