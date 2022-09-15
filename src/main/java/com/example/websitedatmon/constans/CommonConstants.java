@@ -17,10 +17,10 @@ public class CommonConstants {
 
     public static final String SESSION_USER = "user";
 
-    public static final String MY_EMAIL = "websitedoan@gmail.com";
+    public static final String MY_EMAIL = "quanglbph13103@fpt.edu.vn";
 
     // Replace password!!
-    public static final String MY_PASSWORD = "nljkgnluuxfegxnu";
+    public static final String MY_PASSWORD = "Quangdz11";
 
     public static final String CONFIRM_ACCOUNT = "confirm_account";
     public static final String CONFIRM_AWAIT = "confirm_await";

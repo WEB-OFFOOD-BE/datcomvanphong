@@ -2,7 +2,6 @@ package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
-import com.example.websitedatmon.model.EmployeeInfo;
 import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
@@ -63,7 +62,7 @@ public class OrderController {
     public ModelAndView index(String msg) {
         ModelAndView mv = new ModelAndView("order");
         Sort sort = Sort.by("id").descending();
-        List<Orders> list = orderService.findAll(sort);
+        List<Orders> list = orderRepository.getToday();
         List<Menu> menus = menuService.getToday();
         mv.addObject("msg", msg);
         mv.addObject("list", list);
@@ -121,7 +120,11 @@ public class OrderController {
         ModelAndView mv = new ModelAndView("redirect:order");
         String html = "<p>Món ăn đã hoàn thành. Vui lòng tới nhà bếp để nhận món!</p>";
         int id = Integer.parseInt(request.getParameter("id"));
+        int menuId = Integer.parseInt(request.getParameter("menuId"));
         String datetoday = java.time.LocalDate.now().toString();
+        var menu = menuService.findMenuById(menuId);
+        menu.setIsDone(2);
+        menuService.save(menu);
         orderService.update(id, datetoday);
         List<Orders> list = orderService.listSendMail(id, datetoday);
         for (Orders order : list) {
@@ -164,7 +167,7 @@ public class OrderController {
             return mv;
         } else {
             msgUser = "user";
-            var orderCheck = orderRepository.getToday(obj.getId());
+            var orderCheck = orderRepository.getTodayById(obj.getId());
             if (orderCheck.size() == 0) {
                 msg = "notyet";
             } else {

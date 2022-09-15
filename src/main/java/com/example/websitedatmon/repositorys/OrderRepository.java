@@ -27,7 +27,7 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE `orders` SET status = 1 WHERE food_id = ? AND created = ?",nativeQuery = true)
+    @Query(value = "UPDATE `orders` SET status = 1, WHERE food_id = ? AND created = ?",nativeQuery = true)
     int update(int foodid, String date);
 
     @Query(value = "SELECT  * FROM `orders` WHERE food_id = ? AND created = ? ",nativeQuery = true)
@@ -40,5 +40,8 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     List<Object[]> listRequest();
 
     @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND user_id = ?",nativeQuery = true)
-    List<Orders> getToday(int userid);
+    List<Orders> getTodayById(int userid);
+
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE()",nativeQuery = true)
+    List<Orders> getToday();
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  lang="en">
+<html lang="en">
 
 <head th:replace="fragments :: html_head">
 </head>
@@ -38,33 +38,51 @@
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:action="@{/user/order-group}" method="post" enctype="multipart/form-data">
-                                            <div class="col">
-                                                <div class="row">
-                                                    <div class="col-12  ">
-                                                        <label
-                                                               class="col-form-label">Món ăn:</label>
-                                                        <select class="form-control" name="id" required>
-                                                            <option value="" selected >-- Chọn món ăn --</option>
-                                                            <th:block th:each="foods,index : ${menus}">
-                                                            <option th:value="${foods.food.id}"><span th:text="${foods.food.name}"></span></option>
-                                                            </th:block>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-12  ">
-                                                        <label
-                                                               class="col-form-label">Tình trạng:</label>
-                                                        <select class="form-control" name="status" required>
-                                                            <option value="" selected >-- Chọn tình trạng --</option>
-                                                            <option value="1">Đã hoàn thành</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <form th:action="@{/user/order-group}" method="post"
+                                              enctype="multipart/form-data">
+                                            <div class="row">
+                                                <th:block th:each="foods,index : ${menus}">
+                                                    <input type="hidden" name="id" th:value="${foods.food.id}"
+                                                           class="form-control">
 
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Lưu </button>
+                                                    <input type="hidden" name="menuId" th:value="${foods.id}"
+                                                           class="form-control">
+
+                                                    <input type="hidden" name="status" value="2"
+                                                           class="form-control">
+                                                    <div class="col-3 col-md-6 mb-4">
+                                                        <div class="card">
+                                                            <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                                                 data-mdb-ripple-color="light">
+                                                                <div class="hover-zoom">
+                                                                    <img class="h-150" height="200px"
+                                                                         width="100%"
+                                                                         th:if="${foods.food.image}"
+                                                                         th:src="${'/resources/uploads/'}+${foods.food.image}"
+                                                                         alt="">
+                                                                </div>
+                                                                <img class="w-100"/>
+                                                                <div class="mask">
+                                                                    <div class="d-flex justify-content-start align-items-end h-100"></div>
+                                                                </div>
+                                                                <div class="hover-overlay">
+                                                                    <div class="mask"
+                                                                         style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <h5 class="card-title mb-3"
+                                                                    th:text="${foods.food.name}">Product name</h5>
+                                                                <input type="hidden" name="foodId"
+                                                                       th:value="${foods.food.id}">
+                                                                <button type="submit"
+                                                                        class="btn btn-outline-dark">
+                                                                    Đã xong
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </th:block>
                                             </div>
                                         </form>
                                     </div>
@@ -73,79 +91,87 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card-body">
-                        <table id="datatablesSimple">
-                            <thead>
-                            <tr style="background-color: gray !important;">
-                                <th>STT</th>
-                                <th>Nhân viên</th>
-                                <th>Món ăn</th>
-                                <th>Ảnh</th>
-                                <th>Ngày order</th>
-                                <th>Tình trạng</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-
-                            <th:block th:each="category,index : ${list}">
-                                <tr>
-                                    <td th:text="${index.index +1}"></td>
-                                    <td th:text="${category.user.fullName}"></td>
-                                    <td th:text="${category.food.name}"></td>
-                                    <td>
-                                        <img height="200px" width="200px" th:if="${category.food.image}" th:src="${'/resources/uploads/'}+${category.food.image}">
-                                    </td>
-                                    <td th:text="${category.created}"></td>
-                                    <td th:if="${category.status == 1}">Đang chờ xử lý</td>
-                                    <td th:if="${category.status == 2}">Đã hoàn thành</td>
-                                    <td th:if="${category.status == 3}">Đã nhận món</td>
-                                    <td>
-                                        <button th:if="${category.status == 2}" style="width: 100px" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                th:data-bs-target="'#exampleModal'+${category.id}">
-                                            Cập nhập
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                <!-- Modal Update-->
-                                <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"
-                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Cập nhập tình trạng</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form th:action="@{/user/order-edit}" method="post" enctype="multipart/form-data" >
-                                                    <input type="hidden" name="id" th:value="${category.id}" class="form-control">
-                                                    <div class="mb-5">
-                                                        <label  class="col-form-label">Tình trạng:</label>
-                                                        <select class="form-control" name="status" required>
-                                                            <option value="" selected >-- Chọn tình trạng --</option>
-                                                            <option value="2" th:if="${category.status == 2}"  >Đã nhận món</option>
-                                                        </select>
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" style="width:100px" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-
+                    <br>
+                    <table class="table align-middle mb-0 bg-white" id="datatablesSimple1">
+                        <thead class="bg-light">
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Món ăn</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="category,index : ${list}">
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle" height="70px" width="70px"
+                                             th:if="${category.user.image}"
+                                             th:src="${'/resources/uploads/'}+${category.user.image}">
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1" th:text="${category.user.fullName}">John Doe</p>
+                                            <p class="text-muted mb-0" th:text="${category.user.userName}">
+                                                john.doe@gmail.com</p>
                                         </div>
                                     </div>
-                                </div>
+                                </td>
+                                <td>
+                                    <p class="fw-normal mb-1" th:text="${category.food.name}">Software engineer</p>
+                                    <p class="text-muted mb-0" th:text="${category.created}">IT department</p>
+                                </td>
+                                <td th:if="${category.status == 0}" class="text text-warning">Đang chờ xử lý</td>
+                                <td th:if="${category.status == 1}" class="text text-success">Đã hoàn thành</td>
+                                <td th:if="${category.status == 2}" class="text text-info">Đã nhận món</td>
 
-                            </th:block>
-                            </tbody>
-                        </table>
-                    </div>
+                                <td class="text-center">
+                                    <button th:if="${category.status == 1}" type="button"
+                                            class="btn btn-link btn-sm btn-rounded"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="'#exampleModal'+${category.id}">
+                                        Cập nhập
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal Update-->
+                            <div class="modal fade" th:id="'exampleModal'+${category.id}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Cập nhập tình trạng</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form th:action="@{/user/order-edit}" method="post"
+                                                  enctype="multipart/form-data">
+                                                <input type="hidden" name="id" th:value="${category.id}"
+                                                       class="form-control">
+
+                                                <input type="hidden" name="status" value="2"
+                                                       class="form-control">
+                                                <h4>Xác nhận nhân viên nhận món!</h4>
+                                                <div class="modal-footer">
+                                                    <button type="button" style="width:100px"
+                                                            class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                                    </button>
+                                                    <button type="submit" style="width:100px"
+                                                            class="btn btn-primary">Lưu
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Update-->
+                        </th:block>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -165,8 +191,8 @@
 
             var dodai = document.getElementById("dodai").value;
             var a = parseInt(dodai);
-            for(var i = 1;i<=a+10;i++){
-                var name = "#editor"  + i
+            for (var i = 1; i <= a + 10; i++) {
+                var name = "#editor" + i
                 ClassicEditor.create(document.querySelector(name)).then(eidt => {
                     console.log("da" + eidt);
                 })

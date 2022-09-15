@@ -1,10 +1,12 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.entity.Role;
 import com.example.websitedatmon.entity.User;
 import com.example.websitedatmon.serviceImpls.RoleServiceImpl;
 import com.example.websitedatmon.serviceImpls.UserServiceImpl;
 import com.example.websitedatmon.utils.FileUtil;
+import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ public class EmployeeController {
     @Autowired
     RoleServiceImpl roleService;
 
+    Middleware middleware = new Middleware();
     @GetMapping({ "/employee"})
     public ModelAndView index(String msg)
     {
@@ -98,18 +101,17 @@ public class EmployeeController {
 
     @PostMapping(value = "/employee-change")
     public ModelAndView changAvatar(HttpServletRequest request, @RequestParam("file") MultipartFile image){
-        ModelAndView mv = new ModelAndView("redirect:employee");
+        ModelAndView mv = new ModelAndView("redirect:profile");
         HttpSession session = request.getSession();
-        int id = Integer.parseInt(session.getId());
-        var user = userService.findUserById(id);
+        var user = middleware.middlewareUser(request);
         String avatar = "";
         try {
             avatar = FileUtil.upload(image,request);
+            user.setImage(avatar);
+            userService.save(user);
         } catch (IOException e) {
             e.printStackTrace();
         }
-            user.setImage(avatar);
-            userService.save(user);
         mv.addObject("msg","success");
         return mv;
     }

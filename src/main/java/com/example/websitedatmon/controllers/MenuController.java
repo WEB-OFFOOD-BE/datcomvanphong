@@ -86,30 +86,6 @@ public class MenuController {
         return mv;
     }
 
-//    @PostMapping(value = "/menu-add")
-//    public ModelAndView add(HttpServletRequest request , @RequestParam(value = "items[]") List<String> arrId){
-//        ModelAndView mv = new ModelAndView("redirect:menu");
-//        Date today = new Date();
-//        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
-//        String dateString  = LocalDate.ofInstant(tomorrow.toInstant(), ZoneId.systemDefault()).toString();
-//
-//        for (int i = 0; i < arrId.size(); i++) {
-//            List<Menu> check = menuService.findMenued(Integer.parseInt(arrId.get(i)),dateString);
-//            if(check.size() == 0){
-//                Food food = foodService.findFoodById(Integer.parseInt(arrId.get(i)));
-//                Menu menu = new Menu();
-//                menu.setFoodId(food.getId());
-//                menu.setIsActive(1);
-////                menu.setFood(food);
-//                menu.setDate(dateString);
-//                menu.setStatus(1);
-//                menuService.save(menu);
-//            }
-//        }
-//        mv.addObject("msg","success");
-//        return mv;
-//    }
-
     @PostMapping(value = "/menu-add")
     public ModelAndView addFood(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
@@ -123,6 +99,7 @@ public class MenuController {
                 Menu menu = new Menu();
                 menu.setFoodId(food.getId());
                 menu.setIsActive(1);
+                menu.setIsDone(1);
                 menu.setDate(dateString);
                 menu.setStatus(1);
                 menuService.save(menu);
@@ -145,7 +122,7 @@ public class MenuController {
     public ModelAndView order(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
         User user = middleware.middlewareUser(request);
-        var orderCheck = orderRepository.getToday(user.getId());
+        var orderCheck = orderRepository.getTodayById(user.getId());
         if (orderCheck.size() == 0){
             int id = Integer.parseInt(request.getParameter("id"));
             Orders order = new Orders();
@@ -154,10 +131,13 @@ public class MenuController {
             order.setQuantity(1);
             order.setCreated(java.time.LocalDate.now().toString());
             order.setStatus(0);
+            order.setIsActive(1);
             orderService.save(order);
             mv.addObject("msg","success");
         }
-        mv.addObject("msg","failed");
+        else {
+            mv.addObject("msg","failed");
+        }
         return mv;
     }
 
@@ -176,4 +156,22 @@ public class MenuController {
         mv.addObject("msg","success");
         return mv;
     }
+
+    @GetMapping("getFood")
+    public ModelAndView getFoodinMenu(HttpServletRequest request){
+        ModelAndView mv = new ModelAndView("redirect:order");
+        String foodId = request.getParameter("foodId");
+        Date today = new Date();
+        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+        String dateString  = LocalDate.ofInstant(tomorrow.toInstant(), ZoneId.systemDefault()).toString();
+        List<Menu> menu = menuService.findMenued(Integer.parseInt(foodId),dateString);
+        if(menu.size() > 0){
+            mv.addObject("menu",menu);
+        }
+        else {
+            mv.addObject("msg","failed");
+        }
+        return mv;
+    }
+
 }

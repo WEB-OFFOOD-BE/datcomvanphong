@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -27,8 +26,8 @@ public class Orders {
     private Integer foodId;
     @Column(name = "user_id")
     private Integer userId;
-    @Column(name = "isActive")
-    private Byte isActive;
+    @Column(name = "is_active")
+    private Integer isActive;
     @Column(name = "quantity")
     private Integer quantity;
 
@@ -72,11 +71,11 @@ public class Orders {
         this.userId = userId;
     }
 
-    public Byte getIsActive() {
+    public Integer getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Byte isActive) {
+    public void setIsActive(Integer isActive) {
         this.isActive = isActive;
     }
 
