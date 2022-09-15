@@ -50,12 +50,12 @@ public class Menu {
         this.foodId = foodId;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getIsDone() {
+        return isDone;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setIsDone(Integer isDone) {
+        this.isDone = isDone;
     }
 
     public Integer getIsActive() {
@@ -80,9 +80,9 @@ public class Menu {
     private Integer status;
     @Column(name = "food_id")
     private Integer foodId;
-    @Column(name = "quantity")
-    private Integer quantity;
-    @Column(name = "isActive")
+    @Column(name = "is_done")
+    private Integer isDone;
+    @Column(name = "is_active")
     private Integer isActive;
 
     @ManyToOne

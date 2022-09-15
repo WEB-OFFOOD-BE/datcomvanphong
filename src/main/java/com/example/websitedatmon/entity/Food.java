@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -118,7 +117,7 @@ public class Food {
         this.lateOrders = lateOrders;
     }
 
-    @Column(name = "isActive")
+    @Column(name = "is_active")
     private Integer isActive;
     @Column(name = "avg_rate")
     private Float avgRate;
