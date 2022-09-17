@@ -3,6 +3,7 @@ package com.example.websitedatmon.controllers;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.Request;
 import com.example.websitedatmon.entity.User;
+import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
 import com.example.websitedatmon.serviceImpls.RequestServiceImpl;
 import com.example.websitedatmon.utils.Middleware;
@@ -27,6 +28,9 @@ public class HomeController {
     @Autowired
     RequestServiceImpl requestService;
 
+    @Autowired
+    OrderRepository orderRepository;
+
     @GetMapping({ "/home"})
     public ModelAndView home(HttpServletRequest request)
     {
@@ -38,14 +42,14 @@ public class HomeController {
         int sum = 0;
         int sumrequest = 0;
         /*List<Order> list = orderService.findOrderByStatus(2);*/
-        List<Orders> list = orderService.findAll();
-        for (Orders order : list) {
-//            sum = sum + Integer.parseInt(order.getFood().getPrice());
-        }
+        List<Orders> list = orderRepository.getToday();
+        sum = list.size();
+
         List<Request> listRequest = requestService.findAll();
-        for (Request request1 : listRequest) {
-//            sumrequest = sumrequest + Integer.parseInt(request1.getOrders().getFood().getPrice());
-        }
+        List<Orders> done = orderRepository.getTodayAndStatus(1);
+        List<Orders> progress = orderRepository.getTodayAndStatus(0);
+        List<Orders> received = orderRepository.getTodayAndStatus(2);
+
         //loinhuan
         var loinhuan = sum - sumrequest;
         //list food order
@@ -54,8 +58,9 @@ public class HomeController {
         mv.addObject("listfoodorder",listfoodorder);
         mv.addObject("listrequest1",listrequest1);
         mv.addObject("sum",sum);
-        mv.addObject("sumrequest",sumrequest);
-        mv.addObject("loinhuan",loinhuan);
+        mv.addObject("done",done.size());
+        mv.addObject("progress",progress.size());
+        mv.addObject("received",received.size());
         return mv;
     }
 }

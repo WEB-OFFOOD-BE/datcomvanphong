@@ -2,6 +2,7 @@ package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
+import com.example.websitedatmon.model.HistoryResponse;
 import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
@@ -24,7 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/user")
@@ -73,10 +79,18 @@ public class OrderController {
     @GetMapping({"/history"})
     public ModelAndView history(String msg) {
         ModelAndView mv = new ModelAndView("history");
-        Sort sort = Sort.by("id").descending();
-        List<Orders> list = orderService.findAll(sort);
+        Date today = new Date();
+        String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
+        List<Orders> list = orderService.findAll();
+        HistoryResponse historyResponse = new HistoryResponse();
+        List<HistoryResponse> responses = new ArrayList<>();
+        for (var od : list){
+            historyResponse.setIsToday(Objects.equals(od.getCreated(), dateString));
+            historyResponse.setOrder(od);
+            responses.add(historyResponse);
+        }
         mv.addObject("msg", msg);
-        mv.addObject("list", list);
+        mv.addObject("list", responses);
         return mv;
     }
 
