@@ -35,6 +35,18 @@ public class Comment {
         return id;
     }
 
+    public void setFoodId(Integer foodId) {
+        this.foodId = foodId;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }

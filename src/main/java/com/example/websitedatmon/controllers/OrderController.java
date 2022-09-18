@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
 import com.example.websitedatmon.model.HistoryResponse;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.comparator.Comparators;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,11 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -69,6 +69,10 @@ public class OrderController {
         ModelAndView mv = new ModelAndView("order");
         Sort sort = Sort.by("id").descending();
         List<Orders> list = orderRepository.getToday();
+        List<Orders> listYesterday = orderRepository.getYesterday();
+        if (list.size() == 0){
+            list = listYesterday;
+        }
         List<Menu> menus = menuService.getToday();
         mv.addObject("msg", msg);
         mv.addObject("list", list);
@@ -77,18 +81,34 @@ public class OrderController {
     }
 
     @GetMapping({"/history"})
-    public ModelAndView history(String msg) {
+    public ModelAndView history(HttpServletRequest request, String msg) {
         ModelAndView mv = new ModelAndView("history");
         Date today = new Date();
-        String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
-        List<Orders> list = orderService.findAll();
-        HistoryResponse historyResponse = new HistoryResponse();
+        Sort sort = Sort.by("id").descending();
+        String dateString = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
+        var user = Middleware.middlewareUser(request);
+        List<Orders> list = orderService.findOrderByUser(user);
         List<HistoryResponse> responses = new ArrayList<>();
-        for (var od : list){
-            historyResponse.setIsToday(Objects.equals(od.getCreated(), dateString));
-            historyResponse.setOrder(od);
-            responses.add(historyResponse);
+        for (var od : list) {
+            HistoryResponse build = HistoryResponse.builder()
+                    .isToday(Objects.equals(od.getCreated(), dateString))
+                    .order(od).build();
+            responses.add(build);
         }
+        LocalDateTime now = LocalDateTime.now();
+        if (now.getHour() >= CommonConstants.START_ADD && now.getHour() <= CommonConstants.END_ADD) {
+            mv.addObject("check", true);
+        } else {
+            mv.addObject("check", false);
+        }
+
+        var timeOut = timeOutRepository.findById(TimeOutConstants.ORDER.getValue()).orElse(null);
+        if (now.getHour() >= timeOut.getStartTime() && now.getHour() <= timeOut.getEndTime()) {
+            mv.addObject("checkOrder", true);
+        } else {
+            mv.addObject("checkOrder", false);
+        }
+
         mv.addObject("msg", msg);
         mv.addObject("list", responses);
         return mv;
@@ -212,6 +232,16 @@ public class OrderController {
             timeOut.setEndTime(endTime);
             timeOutRepository.save(timeOut);
         }
+        mv.addObject("msg", "success");
+        return mv;
+    }
+
+    @PostMapping(value = "/order-delete")
+    public ModelAndView delete(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("redirect:history");
+        String id = request.getParameter("id");
+        int idc = Integer.parseInt(id);
+        orderService.deleteById(idc);
         mv.addObject("msg", "success");
         return mv;
     }

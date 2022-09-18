@@ -53,13 +53,14 @@ public class RequestController {
     public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:history");
         String desciption = request.getParameter("description");
+        var user = Middleware.middlewareUser(request);
         int id = Integer.parseInt(request.getParameter("id"));
-        Orders order = orderService.findOrderById(id);
         Request request1 = new Request();
         request1.setDescription(desciption);
         request1.setCreated(java.time.LocalDate.now());
-        request1.setOrders(order);
+        request1.setOrderId(id);
         request1.setStatus(0);
+        request1.setUserId(user.getId());
         String fileName = "";
 
         if(image != null){
