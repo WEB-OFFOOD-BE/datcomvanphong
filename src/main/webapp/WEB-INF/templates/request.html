@@ -25,14 +25,13 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="datatablesSimple">
+                        <table id="datatablesSimple" class="table-striped">
                             <thead>
                             <tr style="background-color: gray !important;">
                                 <th>STT</th>
                                 <th>Nhân viên</th>
                                 <th>Số điện thoại</th>
                                 <th>Món ăn</th>
-                                <th>Ảnh</th>
                                 <th>Nội dung</th>
                                 <th>Ngày gửi</th>
                                 <th>Tình trạng</th>
@@ -48,17 +47,21 @@
                                     <td th:text="${category.orders.user.fullName}"></td>
                                     <td th:text="${category.orders.user.phoneNumber}"></td>
                                     <td th:text="${category.orders.food.name}"></td>
-                                    <td>
-                                        <img height="200px" width="200px" th:if="${category.image}" th:src="${'/resources/uploads/'}+${category.image}">
-                                    </td>
+
                                     <td th:utext="${category.description}"></td>
                                     <td th:text="${category.created}"></td>
-                                    <td th:if="${category.status == 0}">Đang chờ xử lý</td>
-                                    <td th:if="${category.status == 1}">Đã xử lý</td>
-                                    <td>
-                                        <button th:if="${category.status == 0}" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    <td th:if="${category.status == 1}" class="text-center text-warning font-weight-bold">Đang chờ xử lý</td>
+                                    <td th:if="${category.status == 3}" class="text-center text-success font-weight-bold">Đã đổi</td>
+                                    <td th:if="${category.status == 4}" class="text-center text-secondary font-weight-bold">Xác nhận đổi</td>
+                                    <td th:if="${category.status == 5}" class="text-center text-danger font-weight-bold">Đã từ chối</td>
+                                    <td class="text-center">
+                                        <button th:if="${category.status == 1}" type="button" class="btn btn-info" data-bs-toggle="modal"
                                                 th:data-bs-target="'#exampleModal'+${category.id}">
                                             Cập nhập
+                                        </button>
+                                        <button th:if="${category.status == 4}" type="button" class="btn btn-info" data-bs-toggle="modal"
+                                                th:data-bs-target="'#received'+${category.id}">
+                                            Giao món
                                         </button>
 
                                     </td>
@@ -82,7 +85,8 @@
                                                         <label  class="col-form-label">Tình trạng:</label>
                                                         <select class="form-control" name="status" required>
                                                             <option value="" selected >-- Chọn tình trạng --</option>
-                                                            <option value="1" >Đã xử lý</option>
+                                                            <option value="4" >Chấp nhận</option>
+                                                            <option value="5" >Từ chối</option>
                                                         </select>
 
                                                     </div>
@@ -99,6 +103,34 @@
                                     </div>
                                 </div>
                                 <!-- Modal Update-->
+
+                                <!-- Modal received-->
+                                <div class="modal fade" th:id="'received'+${category.id}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg ">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabell">Giao món</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h6>Xác nhận giao món đã đổi</h6>
+                                                <form enctype="multipart/form-data" th:action="@{/user/request-update}" method="post">
+                                                    <input type="hidden" th:value="${category.id}" name="id">
+                                                    <input type="hidden" value="3" name="status">
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal received-->
 
                             </th:block>
                             </tbody>

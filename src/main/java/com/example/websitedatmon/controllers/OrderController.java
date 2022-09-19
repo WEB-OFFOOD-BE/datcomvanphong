@@ -27,10 +27,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -82,13 +80,18 @@ public class OrderController {
         Date today = new Date();
         String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
         List<Orders> list = orderService.findAll();
-        HistoryResponse historyResponse = new HistoryResponse();
+        list.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
         List<HistoryResponse> responses = new ArrayList<>();
         for (var od : list){
-            historyResponse.setIsToday(Objects.equals(od.getCreated(), dateString));
-            historyResponse.setOrder(od);
+            var historyResponse = HistoryResponse.builder()
+                    .order(od)
+                    .isToday(Objects.equals(od.getCreated(), dateString))
+                    .build();
             responses.add(historyResponse);
         }
+
         mv.addObject("msg", msg);
         mv.addObject("list", responses);
         return mv;
