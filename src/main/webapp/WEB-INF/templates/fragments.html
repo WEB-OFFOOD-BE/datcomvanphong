@@ -109,6 +109,10 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Yêu cầu hoàn trả
                     </a>
+                    <a th:if="${session.user.role.id == 2}" class="nav-link" href="/user/late-order-list">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Yêu cầu đặt cơm muộn
+                    </a>
                     <a th:if="${session.user.role.id != 1}" class="nav-link" href="/user/newpost">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Tin tức, thông báo
@@ -123,11 +127,15 @@
                     </a>
                     <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/history">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        Lịch sử order
+                        Lịch sử đặt cơm
                     </a>
                     <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/profile">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Thông tin cá nhân
+                    </a>
+                    <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/late-order">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Lịch xử đặt cơm muộn
                     </a>
                     <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/old-request">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>

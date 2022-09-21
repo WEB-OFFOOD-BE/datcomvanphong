@@ -1,6 +1,7 @@
 package com.example.websitedatmon.controllers;
 
 import com.example.websitedatmon.constans.ActiveConstants;
+import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.StatusConstants;
 import com.example.websitedatmon.entity.LateOrder;
 import com.example.websitedatmon.entity.Orders;
@@ -53,21 +54,20 @@ public class RequestController {
 
     Middleware middleware = new Middleware();
 
-    @GetMapping({ "/request"})
-    public ModelAndView index(String msg)
-    {
+    @GetMapping({"/request"})
+    public ModelAndView index(String msg) {
         List<Request> list = requestRepository.findToday();
         list.sort((d1, d2) -> {
             return d2.getId() - d1.getId();
         });
         ModelAndView mv = new ModelAndView("request");
-        mv.addObject("msg",msg);
-        mv.addObject("list",list);
+        mv.addObject("msg", msg);
+        mv.addObject("list", list);
         return mv;
     }
 
     @PostMapping(value = "/request-add")
-    public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
+    public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image) {
         ModelAndView mv = new ModelAndView("redirect:history");
         String desciption = request.getParameter("description");
         var user = Middleware.middlewareUser(request);
@@ -81,61 +81,126 @@ public class RequestController {
         request1.setUserId(user.getId());
         String fileName = "";
 
-        if(image != null){
+        if (image != null) {
             try {
-                fileName = FileUtil.upload(image,request);
+                fileName = FileUtil.upload(image, request);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             request1.setImage(fileName);
-
         }
-
         requestService.save(request1);
-        mv.addObject("msg","success");
+        mv.addObject("msg", "success");
         return mv;
     }
 
+
     @PostMapping(value = "/late-order")
-    public ModelAndView lateOrder(HttpServletRequest request){
+    public ModelAndView lateOrder(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("redirect:menu");
         String description = request.getParameter("description");
         int id = Integer.parseInt(request.getParameter("id"));
         User user = middleware.middlewareUser(request);
-        LateOrder lateOrder = new LateOrder();
-        lateOrder.setFoodId(id);
-        lateOrder.setCreated(java.time.LocalDate.now());
-        lateOrder.setStatusId(StatusConstants.PROGRESSING.getValue());
-        lateOrder.setReason(description);
-        lateOrder.setUserId(user.getId());
-        lateOrder.setIsActive(1);
-        lateOrderService.save(lateOrder);
-        mv.addObject("msg","success");
+        assert user != null;
+        var order = lateOrderService.findAllByUserIdAndCreated(user.getId(), java.time.LocalDate.now());
+        if (order.size() == 0) {
+            LateOrder lateOrder = new LateOrder();
+            lateOrder.setFoodId(id);
+            lateOrder.setCreated(java.time.LocalDate.now());
+            lateOrder.setStatusId(StatusConstants.PROGRESSING.getValue());
+            lateOrder.setReason(description);
+            lateOrder.setUserId(user.getId());
+            lateOrder.setIsActive(ActiveConstants.TRUE.getValue());
+            lateOrderService.save(lateOrder);
+            String html = "Đã có đơn đặt cơm muộn mời bạn kiểu tra danh sách đặt cơm muộn";
+            try {
+                MailUtil.sendHtmlMail(this.javaMailSenderImpl, CommonConstants.MY_EMAIL, "Thông báo", html);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            mv.addObject("msg", "success");
+        } else {
+            mv.addObject("msg", "failed");
+        }
+        return mv;
+    }
+
+    @PostMapping(value = "/late-order-edit")
+    public ModelAndView updateLateOrders(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("redirect:late-order-list");
+        int status = Integer.parseInt(request.getParameter("status"));
+        int id = Integer.parseInt(request.getParameter("id"));
+        LateOrder lateOrder = lateOrderService.findById(id).orElse(null);
+        if (status == 100) {
+            var requests = lateOrderService.findAllByStatusId(StatusConstants.PROGRESSING.getValue());
+            for (var item : requests) {
+                lateOrderService.deleteById(item.getId());
+            }
+        } else {
+            if (lateOrder != null) {
+                if (status == StatusConstants.DELETED.getValue()) {
+                    lateOrderService.deleteById(lateOrder.getId());
+                }
+            } else {
+                lateOrder.setStatusId(status);
+                lateOrderService.save(lateOrder);
+                if (status == 4){
+                    Orders order = new Orders();
+                    order.setFoodId(id);
+                    order.setUserId(lateOrder.getUserId());
+                    order.setRate(ActiveConstants.FALSE.getValue());
+                    order.setCreated(java.time.LocalDate.now().toString());
+                    order.setStatus(0);
+                    order.setIsActive(ActiveConstants.TRUE.getValue());
+                    orderService.save(order);
+                }
+                String html = "";
+                switch (status) {
+                    case 4:
+                        html = "<p>Yêu cầu đặt muốn của bạn đã được xác nhận. Bạn vui lòng chờ email tiếp theo</p>";
+                    case 5:
+                        html = "<p>Yêu cầu đặt muốn của bạn đã bị từ chối</p>";
+                    case 2:
+                        html = "<p>Món ăn của bạn đã sẵn sàng, mời bạn xuống bếp để nhận cơm</p>";
+                }
+
+                try {
+                    MailUtil.sendHtmlMail(this.javaMailSenderImpl, CommonConstants.MY_EMAIL, "Thông báo", html);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        mv.addObject("msg", "success");
         return mv;
     }
 
     @PostMapping(value = "/request-update")
-    public ModelAndView update(HttpServletRequest request){
+    public ModelAndView update(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("redirect:request");
         int status = Integer.parseInt(request.getParameter("status"));
         int id = Integer.parseInt(request.getParameter("id"));
         String html = null;
         Request request1 = requestService.findRequestById(id);
         var ownerId = request1.getUserId();
-        var ownerRequest =userService.findUserById(ownerId);
-        switch (status){
-            case 4: html = "<p>Yêu cầu của bạn đã được xác nhận. Bạn vui lòng chờ email tiếp theo</p>";
-            case 5: html = "<p>Yêu cầu đổi món của bạn đã bị từ chối</p>";
-            case 3: html = "<p>Món ăn của bạn đã xong, mời bạn xuống bếp để nhận món</p>";
+        var ownerRequest = userService.findUserById(ownerId);
+        switch (status) {
+            case 4:
+                html = "<p>Yêu cầu của bạn đã được xác nhận. Bạn vui lòng chờ email tiếp theo</p>";
+            case 5:
+                html = "<p>Yêu cầu đổi món của bạn đã bị từ chối</p>";
+            case 3:
+                html = "<p>Món ăn của bạn đã xong, mời bạn xuống bếp để nhận món</p>";
         }
         try {
-            MailUtil.sendHtmlMail(this.javaMailSenderImpl,ownerRequest.getEmail(),"Thông báo",html);
+            MailUtil.sendHtmlMail(this.javaMailSenderImpl, ownerRequest.getEmail(), "Thông báo", html);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
         request1.setStatus(status);
         requestService.save(request1);
-        mv.addObject("msg","success");
+        mv.addObject("msg", "success");
         return mv;
     }
 }

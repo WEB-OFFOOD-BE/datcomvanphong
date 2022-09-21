@@ -21,13 +21,48 @@
                 <div class="container">
                     <div class="text-center mb-2">
                         <h3>Danh sách yêu cầu đặt món bị muộn</h3>
-                        <p class="lead">Bạn có thể xem toàn bộ yêu cầu đổi trả của bạn ở đây</p>
                     </div>
                     <div th:if="${msg == 'success'}" class="alert alert-success">
                         <strong>Thành công!</strong>
                     </div>
                     <div th:if="${msg == 'failed'}" class="alert alert-danger">
                         <strong>Bạn đã đặt món rồi!</strong>
+                    </div>
+                    <div class="text-lg-end">
+                        <button class="btn btn-primary stretched-link"
+                                data-bs-toggle="modal"
+                                th:data-bs-target="'#deleteModal'"
+                        >Xoá toàn bộ yêu cầu chưa xử lý</button>
+                        <hr>
+                        <!-- Modal Delete-->
+                        <div class="modal fade" th:id="'deleteModal'" tabindex="-1"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Xoá</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form enctype="multipart/form-data" th:action="@{/user/late-order-edit}" method="post">
+                                            <input type="hidden" name="id" value="100">
+                                            <input type="hidden" name="status" value="100">
+                                            <div class="mb-5 text-lg-start">
+                                                <h6>Bạn có muốn xoá toàn bộ những yêu cầu chưa xử lý?</h6>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Xoá</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal Delete-->
                     </div>
                     <th:block th:each="item,index  : ${myRequests}">
                         <div class="card mb-3">
@@ -46,42 +81,58 @@
                                         </div>
                                         <div class="col py-2">
                                             <h6>Trạng thái</h6>
-                                            <h4 class="text-danger" th:if="${item.statusId == 1}">Chưa xử lý</h4>
+                                            <h4 class="text-secondary" th:if="${item.statusId == 1}">Chưa xử lý</h4>
                                             <h4 class="text-success" th:if="${item.statusId == 4}">Đã chấp nhận</h4>
-                                            <h4 class="text-secondary" th:if="${item.statusId == 5}">Đã bị từ chối</h4>
+                                            <h4 class="text-success" th:if="${item.statusId == 3}">Đã giao</h4>
+                                            <h4 class="text-success" th:if="${item.statusId == 2}">Đã nấu xong</h4>
+                                            <h4 class="text-danger" th:if="${item.statusId == 5}">Đã bị từ chối</h4>
                                         </div>
                                         <div class="col ml-8">
                                             <br>
-                                            <button th:if="${item.statusId == 1}"
+                                            <button th:if="${item.statusId == 1}" class="btn btn-primary stretched-link"
                                                     data-bs-toggle="modal"
-                                                    th:data-bs-target="'#deleteModal'+${item.id}"
-                                                    class="btn btn-primary stretched-link">Huỷ</button>
+                                                    th:data-bs-target="'#exampleModal'+${item.id}"
+                                            >Xử lý</button>
+
+                                            <button th:if="${item.statusId == 4}" class="btn btn-primary stretched-link"
+                                                    data-bs-toggle="modal"
+                                                    th:data-bs-target="'#exampleModal'+${item.id}"
+                                            >Đã nấu xong</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Modal Delete-->
-                        <div class="modal fade" th:id="'deleteModal'+${item.id}" tabindex="-1"
+
+                        <!-- Modal Update-->
+                        <div class="modal fade" th:id="'exampleModal'+${item.id}" tabindex="-1"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg ">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Xoá</h5>
+                                        <h5 class="modal-title" id="exampleModalLabell">Cập nhập</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <form enctype="multipart/form-data" th:action="@{/user/late-order-edit}" method="post">
                                             <input type="hidden" th:value="${item.id}" name="id">
-                                            <input type="hidden" name="status" value="7">
-                                            <div class="mb-5 text-lg-start">
-                                                <h6>Bạn có muốn xoá yêu cầu chưa xử lý?</h6>
+                                            <div class="mb-5">
+                                                <label  class="col-form-label">Tình trạng:</label>
+                                                <select class="form-control" name="status" required>
+                                                    <option value="" selected >-- Chọn tình trạng --</option>
+                                                    <option value="4" th:if="${item.statusId == 1}">Chấp nhận</option>
+                                                    <option value="5" th:if="${item.statusId == 1}">Từ chối</option>
+                                                    <option value="3" th:if="${item.statusId == 2}">Đã giao</option>
+                                                    <option value="2" th:if="${item.statusId == 4}">Thông báo nấu xong</option>
+                                                </select>
+
                                             </div>
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-danger">Xoá</button>
+                                                <button type="submit" class="btn btn-primary">Lưu</button>
                                             </div>
                                         </form>
                                     </div>
@@ -89,7 +140,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Modal Delete-->
+                        <!-- Modal Update-->
                     </th:block>
                 </div>
             </section>

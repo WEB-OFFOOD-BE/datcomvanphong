@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
@@ -130,24 +131,27 @@ public class OrderController {
         return mv;
     }
 
-//    @GetMapping({"/current-order"})
-//    public ModelAndView currentOrder(String msg) {
-//        ModelAndView mv = new ModelAndView("current");
-//        Sort sort = Sort.by("id").descending();
-//        List<Orders> list = orderService.findAll(sort);
-//        Orders first = list.get(0);
-//        var food = foodService.findFoodById(first.getFoodId());
-//        mv.addObject("msg", msg);
-//        mv.addObject("first", food);
-//        return mv;
-//    }
 
     @GetMapping({"/late-order"})
-    public ModelAndView lateOrder(String msg) {
+    public ModelAndView lateOrder(String msg, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("lateOrders");
-        Sort sort = Sort.by("id").descending();
-        List<LateOrder> list = lateOrderService.findAllByStatusId(1);
-//        var food = foodService.findFoodById(first.getFoodId());
+        User user = middleware.middlewareUser(request);
+        List<LateOrder> list = lateOrderService.findAllByUserIdAndIsActive(user.getId(), ActiveConstants.TRUE.getValue());
+        list.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
+        mv.addObject("msg", msg);
+        mv.addObject("myRequests", list);
+        return mv;
+    }
+
+    @GetMapping({"/late-order-list"})
+    public ModelAndView lateOrderList(String msg, HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("pageLateOrders");
+        List<LateOrder> list = lateOrderService.findAll();
+        list.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
         mv.addObject("msg", msg);
         mv.addObject("myRequests", list);
         return mv;

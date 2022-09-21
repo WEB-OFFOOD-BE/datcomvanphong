@@ -136,7 +136,7 @@
                                                     <a class="btn btn-outline-dark mt-2"
                                                        data-bs-toggle="modal"
                                                        th:data-bs-target="'#idModel'+${category.id}"
-                                                       th:if="${checkOrder == false}">Đặt món</a>
+                                                       th:if="${checkOrder == true}">Đặt món</a>
                                                     <a class="btn btn-outline-dark mt-2" data-bs-toggle="modal"
                                                        th:data-bs-target="'#idModelDel'+${category.id} "
                                                        th:if="${checkOrder == true}"
