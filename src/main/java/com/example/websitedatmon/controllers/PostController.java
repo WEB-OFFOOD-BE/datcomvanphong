@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.entity.Post;
 import com.example.websitedatmon.serviceImpls.PostServiceImpl;
 import com.example.websitedatmon.utils.FileUtil;
@@ -53,6 +54,7 @@ public class PostController {
         post.setTitle(name);
         post.setDescription(desciption);
         post.setCreated(java.time.LocalDate.now());
+        post.setIsActive(ActiveConstants.TRUE.getValue());
         String fileName = "";
         try {
             fileName = FileUtil.upload(image,request);

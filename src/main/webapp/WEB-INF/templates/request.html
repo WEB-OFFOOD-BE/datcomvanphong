@@ -30,11 +30,10 @@
                             <tr style="background-color: gray !important;">
                                 <th>STT</th>
                                 <th>Nhân viên</th>
-                                <th>Số điện thoại</th>
                                 <th>Món ăn</th>
-                                <th>Nội dung</th>
-                                <th>Ngày gửi</th>
-                                <th>Tình trạng</th>
+                                <th>Lý do</th>
+                                <th>Trạng thái</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -44,16 +43,26 @@
                             <th:block th:each="category,index : ${list}">
                                 <tr>
                                     <td th:text="${index.index +1}"></td>
-                                    <td th:text="${category.orders.user.fullName}"></td>
-                                    <td th:text="${category.orders.user.phoneNumber}"></td>
+                                    <td >
+                                        <p class="fw-bold mb-1" th:text="${category.orders.user.fullName}">John Doe</p>
+                                        <p class="text-muted mb-0" th:text="${category.orders.user.userName}">
+                                            john.doe@gmail.com</p>
+                                    </td>
                                     <td th:text="${category.orders.food.name}"></td>
-
-                                    <td th:utext="${category.description}"></td>
-                                    <td th:text="${category.created}"></td>
+                                    <td>
+                                        <p class="fw-bold mb-1" th:text="${category.description}">John Doe</p>
+                                        <p class="text-muted mb-0" th:text="${category.created}">
+                                    </td>
                                     <td th:if="${category.status == 1}" class="text-center text-warning font-weight-bold">Đang chờ xử lý</td>
                                     <td th:if="${category.status == 3}" class="text-center text-success font-weight-bold">Đã đổi</td>
                                     <td th:if="${category.status == 4}" class="text-center text-secondary font-weight-bold">Xác nhận đổi</td>
                                     <td th:if="${category.status == 5}" class="text-center text-danger font-weight-bold">Đã từ chối</td>
+                                    <td class="text-center">
+                                        <button  type="button" class="btn btn-success" data-bs-toggle="modal"
+                                                 th:data-bs-target="'#exampleModal'+${category.id}">
+                                            Xem chi tiết
+                                        </button>
+                                    </td>
                                     <td class="text-center">
                                         <button th:if="${category.status == 1}" type="button" class="btn btn-info" data-bs-toggle="modal"
                                                 th:data-bs-target="'#exampleModal'+${category.id}">
@@ -63,7 +72,6 @@
                                                 th:data-bs-target="'#received'+${category.id}">
                                             Giao món
                                         </button>
-
                                     </td>
 
                                 </tr>

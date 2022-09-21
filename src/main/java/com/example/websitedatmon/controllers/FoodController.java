@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.entity.Comment;
 import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.Menu;
@@ -56,7 +57,7 @@ public class FoodController {
         }
         food.setImage(fileName);
         food.setAvgRate(0f);
-        food.setIsActive(1);
+        food.setIsActive(ActiveConstants.TRUE.getValue());
         foodService.save(food);
         mv.addObject("msg","success");
         return mv;

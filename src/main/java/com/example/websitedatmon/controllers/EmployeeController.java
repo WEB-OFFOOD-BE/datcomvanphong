@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.entity.Role;
 import com.example.websitedatmon.entity.User;
@@ -79,7 +80,7 @@ public class EmployeeController {
         String username = request.getParameter("taikhoan");
         String password =request.getParameter("matkhau");
         User user = new User();
-        user.setIsActive(1);
+        user.setIsActive(ActiveConstants.TRUE.getValue());
         user.setEmail(email);
         user.setFullName(fullname);
         user.setPhoneNumber(sdt);

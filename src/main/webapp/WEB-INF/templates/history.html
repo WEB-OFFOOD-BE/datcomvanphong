@@ -61,13 +61,22 @@
                                                             Chấm điểm
                                                         </button>
                                                         <button
-                                                                th:if="${item.isToday == true}"
+                                                                th:if="${item.isToday == true && currentHours == 12}"
                                                                 type="button"
                                                                 class="btn btn-outline-primary btn-rounded mb-2" data-bs-toggle="modal"
                                                                 th:data-bs-target="'#exampleModalA'+${item.order.id}">
                                                             Hoàn trả
+                                                        </button>
                                                     </div>
+                                                    <button
+                                                            th:if="${check == true && item.order.status == 0 && item.isToday == true }"
+                                                            type="button"
+                                                            class="btn btn-outline-primary btn-rounded mb-2" data-bs-toggle="modal"
+                                                            th:data-bs-target="'#delete'+${item.order.id}">
+                                                        Huỷ order
+                                                    </button>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -116,6 +125,43 @@
                                         </div>
                                     </div>
                                 </div>
+<!--                                    delete-->
+                                <div class="modal fade" th:id="'delete'+${item.order.id}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Huỷ order</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form th:action="@{/user/order-delete}"
+                                                      method="post">
+                                                    <h6>Bạn có muốn huỷ order này không?</h6>
+                                                    <input type="hidden" class="form-control"
+                                                           id="id"
+                                                           name="id"
+                                                           th:value="${item.order.id}">
+                                                    <div class="modal-footer"
+                                                         style="margin-top: 20px">
+                                                        <button type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit"
+                                                                class="btn btn-danger">Xóa
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--delete-->
+
                                 <!-- -->
                                 <div class="modal fade" th:id="'exampleModalA'+${item.order.id}" tabindex="-1"
                                      aria-labelledby="exampleModalLabel" aria-hidden="true">

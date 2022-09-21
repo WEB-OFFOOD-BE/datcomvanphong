@@ -1,9 +1,11 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
 import com.example.websitedatmon.model.HistoryResponse;
 import com.example.websitedatmon.repositorys.OrderRepository;
+import com.example.websitedatmon.repositorys.RequestRepository;
 import com.example.websitedatmon.repositorys.TimeOutRepository;
 import com.example.websitedatmon.serviceImpls.FoodServiceImpl;
 import com.example.websitedatmon.serviceImpls.MenuServiceImpl;
@@ -26,9 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -56,6 +58,8 @@ public class OrderController {
 
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    RequestRepository requestRepository;
 
     @Autowired
     UserService userService;
@@ -67,6 +71,10 @@ public class OrderController {
         ModelAndView mv = new ModelAndView("order");
         Sort sort = Sort.by("id").descending();
         List<Orders> list = orderRepository.getToday();
+        List<Orders> listYesterday = orderRepository.getYesterday();
+        if (list.size() == 0){
+            list = listYesterday;
+        }
         List<Menu> menus = menuService.getToday();
         mv.addObject("msg", msg);
         mv.addObject("list", list);
@@ -75,25 +83,50 @@ public class OrderController {
     }
 
     @GetMapping({"/history"})
-    public ModelAndView history(String msg) {
+    public ModelAndView history(HttpServletRequest request, String msg) {
         ModelAndView mv = new ModelAndView("history");
         Date today = new Date();
         String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(today);
+        int hours = calendar.get(Calendar.HOUR_OF_DAY);
         List<Orders> list = orderService.findAll();
         list.sort((d1, d2) -> {
             return d2.getId() - d1.getId();
         });
+        Sort sort = Sort.by("id").descending();
+        var user = Middleware.middlewareUser(request);
         List<HistoryResponse> responses = new ArrayList<>();
-        for (var od : list){
+        for (var od : list) {
             var historyResponse = HistoryResponse.builder()
                     .order(od)
                     .isToday(Objects.equals(od.getCreated(), dateString))
                     .build();
             responses.add(historyResponse);
         }
+        for (var od : list) {
+            HistoryResponse build = HistoryResponse.builder()
+                    .isToday(Objects.equals(od.getCreated(), dateString))
+                    .order(od).build();
+            responses.add(build);
+        }
+        LocalDateTime now = LocalDateTime.now();
+        if (now.getHour() >= CommonConstants.START_ADD && now.getHour() <= CommonConstants.END_ADD) {
+            mv.addObject("check", true);
+        } else {
+            mv.addObject("check", false);
+        }
+
+        var timeOut = timeOutRepository.findById(TimeOutConstants.ORDER.getValue()).orElse(null);
+        if (now.getHour() >= timeOut.getStartTime() && now.getHour() <= timeOut.getEndTime()) {
+            mv.addObject("checkOrder", true);
+        } else {
+            mv.addObject("checkOrder", false);
+        }
 
         mv.addObject("msg", msg);
         mv.addObject("list", responses);
+        mv.addObject("currentHours", hours);
         return mv;
     }
 
@@ -155,12 +188,36 @@ public class OrderController {
         return mv;
     }
 
-    @GetMapping({"/current"})
-    public ModelAndView current(String msg) {
+    @GetMapping({"/old-request"})
+    public ModelAndView oldRequest(String msg,HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("requestProgressing");
-        var myRequests = requestService.findRequest(3);
+        User user = middleware.middlewareUser(request);
+        var myRequests = requestService.findRequest(user.getId());
+        myRequests.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
         mv.addObject("msg", msg);
         mv.addObject("myRequests", myRequests);
+        return mv;
+    }
+
+    @GetMapping({"/current"})
+    public ModelAndView current(String msg,HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("requestProgressing");
+        User user = middleware.middlewareUser(request);
+        var myRequests = requestRepository.findTodayAndUser(3);
+        myRequests.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
+        var rq = myRequests.get(0);
+
+        if (rq != null){
+            mv.addObject("myRequests", rq);
+        }
+        else {
+            msg = "failed";
+            mv.addObject("msg", msg);
+        }
         return mv;
     }
 
@@ -215,6 +272,16 @@ public class OrderController {
             timeOut.setEndTime(endTime);
             timeOutRepository.save(timeOut);
         }
+        mv.addObject("msg", "success");
+        return mv;
+    }
+
+    @PostMapping(value = "/order-delete")
+    public ModelAndView delete(HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("redirect:history");
+        String id = request.getParameter("id");
+        int idc = Integer.parseInt(id);
+        orderService.deleteById(idc);
         mv.addObject("msg", "success");
         return mv;
     }

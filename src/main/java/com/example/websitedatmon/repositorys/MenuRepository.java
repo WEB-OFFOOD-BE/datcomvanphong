@@ -26,7 +26,7 @@ public interface MenuRepository extends JpaRepository<Menu,Integer> {
     @Query(value = "SELECT * FROM `menu` WHERE date = DATE_ADD(CURDATE(),INTERVAL 1 DAY)",nativeQuery = true)
     List<Menu> getTomorrow();
 
-    @Query(value = "SELECT * FROM `menu` WHERE date = CURDATE() AND is_done != 2",nativeQuery = true)
+    @Query(value = "SELECT * FROM `menu` WHERE date IN (CURDATE() + INTERVAL 1 DAY) AND is_done != 2",nativeQuery = true)
     List<Menu> getToday();
 
     Menu save(Menu menu);

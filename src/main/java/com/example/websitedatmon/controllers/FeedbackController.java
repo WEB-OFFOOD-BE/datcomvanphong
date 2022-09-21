@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.entity.*;
 import com.example.websitedatmon.serviceImpls.FeedbackServiceImpl;
 import com.example.websitedatmon.utils.Middleware;
@@ -53,6 +54,7 @@ public class FeedbackController {
         feedBack.setDescription(desciption);
         feedBack.setCreated(java.time.LocalDate.now());
         feedBack.setStatus(1);
+        feedBack.setIsActive(ActiveConstants.TRUE.getValue());
         feedbackService.save(feedBack);
         mv.addObject("msg","success");
         return mv;

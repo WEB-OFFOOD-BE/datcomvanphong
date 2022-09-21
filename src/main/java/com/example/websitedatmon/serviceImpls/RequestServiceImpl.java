@@ -60,16 +60,21 @@ public class RequestServiceImpl implements RequestService {
         var currentOrder = orders.get(orders.size() - 1);
         var requests = requestRepository.findAllByUserId(3);
         List<RequestResponse> responses = new ArrayList<>();
-         for (var item : requests){
+        int i = 0;
+        for (var item : requests){
              responses.add(
                      RequestResponse.builder()
+                             .id(i)
                              .FoodName(item.getOrders().getFood().getName())
                              .image(item.getImage())
+                             .food(item.getOrders().getFood())
                              .reason(item.getDescription())
-                             .status(baseService.checkStatus(item.getStatus()))
+                             .status(item.getStatus())
+                             .order(item.getOrders())
                              .build()
              );
-         }
+            i++;
+        }
         return responses;
     }
 

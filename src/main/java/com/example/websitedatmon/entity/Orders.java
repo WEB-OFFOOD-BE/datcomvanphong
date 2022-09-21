@@ -28,8 +28,8 @@ public class Orders {
     private Integer userId;
     @Column(name = "is_active")
     private Integer isActive;
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "is_rate")
+    private Integer rate;
 
     public Integer getId() {
         return id;
@@ -79,12 +79,12 @@ public class Orders {
         this.isActive = isActive;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getRate() {
+        return rate;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setRate(Integer rate) {
+        this.rate = rate;
     }
 
     public User getUser() {

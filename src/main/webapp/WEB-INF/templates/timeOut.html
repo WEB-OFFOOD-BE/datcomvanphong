@@ -15,8 +15,15 @@
     </div>
 
     <div id="layoutSidenav_content">
+        <div th:if="${msg == 'success'}" class="alert alert-success">
+            <strong>Thành công!</strong>
+        </div>
+        <div th:if="${msg == 'failed'}" class="alert alert-danger">
+            <strong>Thất bại!</strong>
+        </div>
         <main>
             <div class="modal-dialog modal-lg ">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabelll">Thêm mới</h5>

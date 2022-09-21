@@ -40,10 +40,15 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND user_id = ?",nativeQuery = true)
     List<Orders> getTodayById(int userid);
+    @Query(value = "SELECT * FROM `orders` WHERE created = DATE_SUB(CURDATE(), INTERVAL 1 DAY)",nativeQuery = true)
+    List<Orders> getYesterday();
 
     @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE()",nativeQuery = true)
     List<Orders> getToday();
 
     @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() and status = ?",nativeQuery = true)
     List<Orders> getTodayAndStatus(int status);
+
+    @Query(value = "SELECT * FROM `orders` WHERE created > CURDATE() and status = ?",nativeQuery = true)
+        List<Orders> getTomorrowAndStatus(int status);
 }

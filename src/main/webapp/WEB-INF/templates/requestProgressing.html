@@ -33,18 +33,21 @@
                                                 <div class="thumb-lg member-thumb mx-auto"><img class="rounded-circle" height="100px" width="100px" th:if="${item.image}" th:src="${'/resources/uploads/'}+${item.image}"></div>
                                             </figure>
                                         </div>
-                                        <div class="col text-center">
+                                        <div class="col">
                                             <h4 class="text-primary" th:text="${item.foodName}">Junior Frontend
                                                 Developer</h4>
-                                            <h6 th:text="${item.reason}">Tên món ăn</h6>
+                                            <h6 class="text-muted " th:text="${item.reason}">Tên món ăn</h6>
                                         </div>
-                                        <div class="col py-2">
-                                            <h6>Trạng thái</h6>
-                                            <h4 class="text-danger" th:text="${item.status}">Junior Frontend Developer</h4>
+                                        <div class="col text-center  font-weight-bold">
+                                            <h6 th:if="${item.status == 1}" class="text-secondary">Đang chờ xử lý</h6>
+                                            <h6 th:if="${item.status == 3}" class="text-success">Đã hoàn thành</h6>
+                                            <h6 th:if="${item.status == 5}" class="text-danger">Đã bị từ chối</h6>
+                                            <h6 th:if="${item.status == 4}" class="text-secondary">Đã xác nhận yêu cầu</h6>
+                                            <p class="text-muted " th:text="${item.food.created}">
                                         </div>
-                                        <div class="col ml-8">
+                                        <div class="col">
                                             <br>
-                                            <a href="#" class="btn btn-primary stretched-link">Xem chi tiết</a>
+                                            <a th:if="${item.status == 1}" class="btn btn-primary stretched-link">Hủy</a>
                                         </div>
                                     </div>
                                 </div>

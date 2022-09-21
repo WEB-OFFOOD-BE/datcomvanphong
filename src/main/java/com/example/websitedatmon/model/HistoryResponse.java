@@ -8,9 +8,25 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
+@Data
 public class HistoryResponse {
-    Orders order;
-    Boolean isToday;
+    public Orders order;
+    public Boolean isToday;
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public Boolean getIsToday() {
+        return isToday;
+    }
+
+    public void setToday(Boolean today) {
+        isToday = today;
+    }
 }

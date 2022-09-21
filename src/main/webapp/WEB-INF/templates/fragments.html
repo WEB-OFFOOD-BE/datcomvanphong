@@ -87,6 +87,10 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                        Quản lý góp ý
                     </a>
+                    <a th:if="${session.user.role.id == 1}" class="nav-link" href="/user/time-out">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Quản lý thời gian
+                    </a>
                     <a th:if="${session.user.role.id == 2}" class="nav-link" href="/user/food">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Quản lý món ăn
@@ -120,6 +124,14 @@
                     <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/history">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Lịch sử order
+                    </a>
+                    <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/profile">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Thông tin cá nhân
+                    </a>
+                    <a th:if="${session.user.role.id == 3}" class="nav-link" href="/user/old-request">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Yêu cầu đổi trả
                     </a>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.Food;
@@ -98,7 +99,7 @@ public class MenuController {
                 Food food = foodService.findFoodById(Integer.parseInt(foodId));
                 Menu menu = new Menu();
                 menu.setFoodId(food.getId());
-                menu.setIsActive(1);
+                menu.setIsActive(ActiveConstants.TRUE.getValue());
                 menu.setIsDone(1);
                 menu.setDate(dateString);
                 menu.setStatus(1);
@@ -128,10 +129,10 @@ public class MenuController {
             Orders order = new Orders();
             order.setFoodId(id);
             order.setUserId(user.getId());
-            order.setQuantity(1);
+            order.setRate(ActiveConstants.FALSE.getValue());
             order.setCreated(java.time.LocalDate.now().toString());
             order.setStatus(0);
-            order.setIsActive(1);
+            order.setIsActive(ActiveConstants.TRUE.getValue());
             orderService.save(order);
             mv.addObject("msg","success");
         }

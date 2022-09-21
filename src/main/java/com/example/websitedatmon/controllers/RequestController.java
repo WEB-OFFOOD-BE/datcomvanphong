@@ -1,10 +1,12 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.constans.StatusConstants;
 import com.example.websitedatmon.entity.LateOrder;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.Request;
 import com.example.websitedatmon.entity.User;
+import com.example.websitedatmon.repositorys.RequestRepository;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
 import com.example.websitedatmon.serviceImpls.RequestServiceImpl;
 import com.example.websitedatmon.services.LateOrderService;
@@ -35,6 +37,9 @@ public class RequestController {
     RequestServiceImpl requestService;
 
     @Autowired
+    RequestRepository requestRepository;
+
+    @Autowired
     OrderServiceImpl orderService;
 
     @Autowired
@@ -51,8 +56,10 @@ public class RequestController {
     @GetMapping({ "/request"})
     public ModelAndView index(String msg)
     {
-        Sort sort = Sort.by("id").descending();
-        List<Request> list = requestService.findAll(sort);
+        List<Request> list = requestRepository.findToday();
+        list.sort((d1, d2) -> {
+            return d2.getId() - d1.getId();
+        });
         ModelAndView mv = new ModelAndView("request");
         mv.addObject("msg",msg);
         mv.addObject("list",list);
@@ -63,13 +70,15 @@ public class RequestController {
     public ModelAndView add(HttpServletRequest request, @RequestParam("file") MultipartFile image){
         ModelAndView mv = new ModelAndView("redirect:history");
         String desciption = request.getParameter("description");
+        var user = Middleware.middlewareUser(request);
         int id = Integer.parseInt(request.getParameter("id"));
-        Orders order = orderService.findOrderById(id);
         Request request1 = new Request();
         request1.setDescription(desciption);
         request1.setCreated(java.time.LocalDate.now());
-        request1.setOrders(order);
-        request1.setStatus(0);
+        request1.setOrderId(id);
+        request1.setStatus(1);
+        request1.setIsActive(ActiveConstants.TRUE.getValue());
+        request1.setUserId(user.getId());
         String fileName = "";
 
         if(image != null){
