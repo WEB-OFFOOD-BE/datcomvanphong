@@ -15,7 +15,7 @@ public interface OrderService {
     List<Orders> findAll(Sort sort);
     Orders save(Orders order);
     void deleteById(int id);
-    int update(int foodid, String date);
+    int update(int foodid);
     List<Orders> listSendMail(int foodid, String date);
     List<Orders> findOrderByStatus(int status);
     List<Object[]> listFoodOrder();

@@ -5,6 +5,7 @@ import com.example.websitedatmon.constans.CommonConstants;
 import com.example.websitedatmon.constans.TimeOutConstants;
 import com.example.websitedatmon.entity.*;
 import com.example.websitedatmon.model.HistoryResponse;
+import com.example.websitedatmon.repositorys.MenuRepository;
 import com.example.websitedatmon.repositorys.OrderRepository;
 import com.example.websitedatmon.repositorys.RequestRepository;
 import com.example.websitedatmon.repositorys.TimeOutRepository;
@@ -63,6 +64,9 @@ public class OrderController {
     RequestRepository requestRepository;
 
     @Autowired
+    MenuRepository menuRepository;
+
+    @Autowired
     UserService userService;
 
     Middleware middleware = new Middleware();
@@ -73,13 +77,19 @@ public class OrderController {
         Sort sort = Sort.by("id").descending();
         List<Orders> list = orderRepository.getToday();
         List<Orders> listYesterday = orderRepository.getYesterday();
+        List<Menu> menus = menuService.getToday();
+        List<Menu> menusYesterday = menuRepository.getYesterday();
+
+        List<Menu> menu = menus;
+        if (menu.size() == 0){
+            menu = menusYesterday;
+        }
         if (list.size() == 0){
             list = listYesterday;
         }
-        List<Menu> menus = menuService.getToday();
         mv.addObject("msg", msg);
         mv.addObject("list", list);
-        mv.addObject("menus", menus);
+        mv.addObject("menus", menu);
         return mv;
     }
 
@@ -87,7 +97,9 @@ public class OrderController {
     public ModelAndView history(HttpServletRequest request, String msg) {
         ModelAndView mv = new ModelAndView("history");
         Date today = new Date();
-        String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
+//        String dateString  = LocalDate.ofInstant(today.toInstant(), ZoneId.systemDefault()).toString();
+        String dateString  = java.time.LocalDate.now().toString();
+
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(today);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
@@ -179,7 +191,12 @@ public class OrderController {
         var menu = menuService.findMenuById(menuId);
         menu.setIsDone(2);
         menuService.save(menu);
-        orderService.update(id, datetoday);
+        var listFood = orderRepository.getFoodInToday(id);
+        for(var food : listFood){
+            food.setStatus(1);
+            orderRepository.save(food);
+        }
+        orderService.findOrderById(id);
         List<Orders> list = orderService.listSendMail(id, datetoday);
         for (Orders order : list) {
             try {
@@ -196,12 +213,21 @@ public class OrderController {
     public ModelAndView oldRequest(String msg,HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("requestProgressing");
         User user = middleware.middlewareUser(request);
-        var myRequests = requestService.findRequest(user.getId());
+        var myRequests = requestRepository.findAllByUserId(user.getId());
         myRequests.sort((d1, d2) -> {
             return d2.getId() - d1.getId();
         });
         mv.addObject("msg", msg);
         mv.addObject("myRequests", myRequests);
+        return mv;
+    }
+
+    @PostMapping({"/request-delete"})
+    public ModelAndView requestDelete(String msg,HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView("redirect:old-request");
+        int id = Integer.parseInt(request.getParameter("id"));
+        requestRepository.deleteById(id);
+        mv.addObject("msg", "success");
         return mv;
     }
 
@@ -250,11 +276,6 @@ public class OrderController {
                 msg = "notyet";
             } else {
                 var order1 = orderCheck.stream().findFirst().orElse(null);
-                var food = foodService.findFoodById(order1.getFoodId());
-//                EmployeeInfo order = EmployeeInfo.builder()
-//                        .user(obj)
-//                        .food(food)
-//                        .build();
                 mv.addObject("order", order1);
                 msg = "ok";
             }

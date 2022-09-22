@@ -1,11 +1,13 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.entity.Comment;
 import com.example.websitedatmon.entity.Food;
 import com.example.websitedatmon.entity.User;
 import com.example.websitedatmon.repositorys.CommentRepository;
 import com.example.websitedatmon.services.CommentService;
 import com.example.websitedatmon.services.FoodService;
+import com.example.websitedatmon.services.OrderService;
 import com.example.websitedatmon.services.UserService;
 import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CommentController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    OrderService orderService;
+
     Middleware middleware = new Middleware();
 
     @PostMapping("/comment")
@@ -57,9 +62,11 @@ public class CommentController {
         }else {
             food.setAvgRate((float) (Math.ceil(rate * 10) / 10));
         }
-        int userId = user.getId();
+        var order = orderService.findOrderById(orderId);
+        order.setRate(ActiveConstants.TRUE.getValue());
+        orderService.save(order);
         comment.setFoodId(foodId);
-        comment.setUserId(userId);
+        comment.setUserId(user.getId());
         comment.setOrderId(orderId);
         comment.setCreatedAt(java.time.LocalDate.now().toString());
         comment.setIsActive(1);

@@ -21,10 +21,15 @@
                 <h1 th:if="${session.user.role.id == 3}" class="mt-4">THỰC ĐƠN NGÀY MAI</h1>
                 <div class="card mb-4">
                     <div class="card-header">
+                        <h4 th:if="${session.user.role.id == 3 && order != null}" class="mt-4" th:text="'Hôm nay bạn đã đặt món : ' +  ${order.food.name}">Hôm nay bạn đã đặt món : Lòng xào dưa</h4>
+                        <h4 th:if="${session.user.role.id == 3 && order == null}" class="mt-4" >Hôm nay bạn đã chưa đặt món</h4>
                         <div th:if="${msg == 'success'}" class="alert alert-success">
                             <strong>Thành công!</strong>
                         </div>
                         <div th:if="${msg == 'failed'}" class="alert alert-danger">
+                            <strong>Thất bại!</strong>
+                        </div>
+                        <div th:if="${msg == 'exits'}" class="alert alert-danger">
                             <strong>Bạn đã đặt món rồi!</strong>
                         </div>
                         <div class="btn-group" th:if="${session.user.role.id == 2 && check == true  }">

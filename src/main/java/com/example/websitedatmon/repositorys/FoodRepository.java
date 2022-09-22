@@ -12,6 +12,7 @@ public interface FoodRepository extends JpaRepository<Food,Integer> {
     Food findFoodById(int id);
 
     List<Food> findAll();
+    List<Food> findAllByIsActive(Integer isActive);
     List<Food> findAll(Sort sort);
     Food save(Food food);
     void deleteById(int id);

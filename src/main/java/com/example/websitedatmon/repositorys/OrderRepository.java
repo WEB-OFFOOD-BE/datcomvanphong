@@ -26,10 +26,13 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE `orders` SET status = 1 WHERE food_id = ? AND created = ? ",nativeQuery = true)
-    int update(int foodid, String date);
+    @Query(value = "UPDATE `orders` SET status = 1 WHERE food_id = ? AND created = DATE_SUB(CURDATE(), INTERVAL 1 DAY)",nativeQuery = true)
+    int update(int foodid);
 
-    @Query(value = "SELECT  * FROM `orders` WHERE food_id = ? AND created = ? ",nativeQuery = true)
+    @Query(value = "SELECT * FROM `orders` WHERE food_id = ? AND created = DATE_SUB(CURDATE(), INTERVAL 1 DAY)",nativeQuery = true)
+    List<Orders> getFoodInToday(int foodid);
+
+    @Query(value = "SELECT  * FROM `orders` WHERE food_id = ? AND created = ? AND is_active = 1",nativeQuery = true)
     List<Orders> listSendMail(int foodid, String date);
 
     @Query(value = "SELECT a.food_id as 'foodid', b.name as 'name', b.image as 'image', COUNT(a.id) as 'soluongbanduoc' FROM `orders` as a, `food` as b WHERE a.food_id = b.id  GROUP BY a.food_id",nativeQuery = true)
@@ -38,17 +41,21 @@ public interface OrderRepository extends JpaRepository<Orders,Integer> {
     @Query(value = "SELECT a.food_id as 'foodid', b.name as 'name', b.image as 'image', COUNT(a.food_id) as 'soluonghoantra' FROM `orders` as a, `food` as b, `request` as c WHERE a.food_id = b.id AND c.order_id = a.id GROUP BY a.food_id",nativeQuery = true)
     List<Object[]> listRequest();
 
-    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND user_id = ?",nativeQuery = true)
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND is_active = 1 AND user_id = ?",nativeQuery = true)
     List<Orders> getTodayById(int userid);
-    @Query(value = "SELECT * FROM `orders` WHERE created = DATE_SUB(CURDATE(), INTERVAL 1 DAY)",nativeQuery = true)
+
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND is_active = 1 AND user_id = ? AND status = 0",nativeQuery = true)
+    List<Orders> getTodayByIdAndStatus(int userid);
+
+    @Query(value = "SELECT * FROM `orders` WHERE created = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND is_active = 1",nativeQuery = true)
     List<Orders> getYesterday();
 
-    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE()",nativeQuery = true)
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() AND is_active = 1",nativeQuery = true)
     List<Orders> getToday();
 
-    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() and status = ?",nativeQuery = true)
+    @Query(value = "SELECT * FROM `orders` WHERE created = CURDATE() and status = ? AND is_active = 1",nativeQuery = true)
     List<Orders> getTodayAndStatus(int status);
 
-    @Query(value = "SELECT * FROM `orders` WHERE created > CURDATE() and status = ?",nativeQuery = true)
+    @Query(value = "SELECT * FROM `orders` WHERE created > CURDATE() and status = ? AND is_active = 1",nativeQuery = true)
         List<Orders> getTomorrowAndStatus(int status);
 }

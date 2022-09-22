@@ -59,9 +59,10 @@ public class OrderServiceImpl implements OrderService {
     public void deleteById(int id) {
         orderRepository.deleteById(id);
     }
+
     @Override
-    public int update(int foodid, String date) {
-        return  orderRepository.update(foodid,date);
+    public int update(int foodid) {
+        return  orderRepository.update(foodid);
     }
     @Override
     public List<Orders> listSendMail(int foodid, String date) {

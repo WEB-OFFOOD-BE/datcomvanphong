@@ -16,7 +16,7 @@ public interface RequestRepository extends JpaRepository<Request,Integer> {
     List<Request> findAll(Sort sort);
     Request save(Request request);
     void deleteById(int id);
-    List<Request> findAllByUserId( Integer userId);
+    List<Request> findAllByUserId(Integer userId);
 
     @Query(value = "SELECT * FROM `request` WHERE created = CURDATE()",nativeQuery = true)
     List<Request> findToday();

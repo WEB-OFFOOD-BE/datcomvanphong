@@ -21,7 +21,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Food> findAll() {
-        return foodRepository.findAll();
+        return foodRepository.findAllByIsActive(1);
     }
 
     @Override

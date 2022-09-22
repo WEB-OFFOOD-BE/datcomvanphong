@@ -13,7 +13,7 @@
     <div th:replace="fragments :: html_menu" id="layoutSidenav_nav">
 
     </div>
-    <div id="layoutSidenav_content">
+    <div id="layoutSidenav_content" style="background-image: url('https://wallpaperaccess.com/full/767277.jpg');background-repeat: no-repeat; background-size: cover; background-position: center center;">
         <div class="container-fluid px-4">
 
             <ol class="breadcrumb mb-4">
@@ -21,9 +21,9 @@
             </ol>
             <main>
                 <div class="container-fluid px-4">
-                    <h4 class="mt-1" th:if="${session.user.role.id != 2}">Chúc bạn một ngày tốt lành</h4>
+                    <h1 class="mt-1 text-white" th:if="${session.user.role.id != 2}">Chúc bạn một ngày tốt lành</h1>
                     <div class="row" th:if="${session.user.role.id == 2}">
-                        <h2 class="mt-1" >Số lượt đặt món của hôm nay</h2>
+                        <h2 class="mt-1 text-white" >Số lượt đặt món của hôm nay</h2>
                         <hr>
                         <div class="col ">
                             <div class="card bg-success text-white mb-4">

@@ -110,5 +110,5 @@ public class Request {
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Orders orders;
+    public Orders orders;
 }

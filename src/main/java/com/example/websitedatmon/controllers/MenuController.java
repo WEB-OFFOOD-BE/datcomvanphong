@@ -57,8 +57,14 @@ public class MenuController {
     Middleware middleware = new Middleware();
 
     @GetMapping({ "/menu"})
-    public ModelAndView index(String msg)
+    public ModelAndView index(String msg, HttpServletRequest request)
     {
+        User user = middleware.middlewareUser(request);
+        var orderCheck = orderRepository.getTodayById(user.getId());
+        Orders order = null;
+        if (orderCheck.size() > 0){
+            order = orderCheck.stream().findFirst().orElse(null);
+        }
         List<Menu> list = menuService.getTomorrow();
         List<Food> listF = foodService.findAll();
         List<Food> listIdFood = list.stream().map(Menu::getFood).collect(Collectors.toList());
@@ -66,6 +72,8 @@ public class MenuController {
         listF = listF.stream().filter(x -> !listInt.contains(x.getId())).collect(Collectors.toList());
         LocalDateTime now = LocalDateTime.now();
         ModelAndView mv = new ModelAndView("menu");
+        mv.addObject("order",order);
+
         mv.addObject("msg",msg);
         mv.addObject("list",list);
         mv.addObject("listF",listF);
@@ -123,7 +131,7 @@ public class MenuController {
     public ModelAndView order(HttpServletRequest request){
         ModelAndView mv = new ModelAndView("redirect:menu");
         User user = middleware.middlewareUser(request);
-        var orderCheck = orderRepository.getTodayById(user.getId());
+        var orderCheck = orderRepository.getTodayByIdAndStatus(user.getId());
         if (orderCheck.size() == 0){
             int id = Integer.parseInt(request.getParameter("id"));
             Orders order = new Orders();
@@ -131,13 +139,14 @@ public class MenuController {
             order.setUserId(user.getId());
             order.setRate(ActiveConstants.FALSE.getValue());
             order.setCreated(java.time.LocalDate.now().toString());
-            order.setStatus(0);
+            order.setStatus(ActiveConstants.FALSE.getValue());
+            order.setIsRequest(ActiveConstants.FALSE.getValue());
             order.setIsActive(ActiveConstants.TRUE.getValue());
             orderService.save(order);
             mv.addObject("msg","success");
         }
         else {
-            mv.addObject("msg","failed");
+            mv.addObject("msg","exits");
         }
         return mv;
     }

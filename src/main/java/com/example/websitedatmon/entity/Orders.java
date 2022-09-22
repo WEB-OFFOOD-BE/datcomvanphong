@@ -30,6 +30,16 @@ public class Orders {
     private Integer isActive;
     @Column(name = "is_rate")
     private Integer rate;
+    @Column(name = "is_request")
+    private Integer isRequest;
+
+    public Integer getIsRequest() {
+        return isRequest;
+    }
+
+    public void setIsRequest(Integer isRequest) {
+        this.isRequest = isRequest;
+    }
 
     public Integer getId() {
         return id;

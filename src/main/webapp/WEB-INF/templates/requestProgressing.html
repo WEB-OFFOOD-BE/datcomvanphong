@@ -18,6 +18,9 @@
     <div id="layoutSidenav_content">
         <main>
             <section id="about-section" class="pt-2">
+                <div th:if="${msg == 'success'}" class="alert alert-success">
+                    <strong>Thành công!</strong>
+                </div>
                 <div class="container">
                     <div class="text-center mb-2">
                         <h3>Danh sách yêu cầu đổi trả</h3>
@@ -30,63 +33,107 @@
                                     <div class="row flex-fill">
                                         <div class="col-sm-2 text-center">
                                             <figure class="potoaboutwrap">
-                                                <div class="thumb-lg member-thumb mx-auto"><img class="rounded-circle" height="100px" width="100px" th:if="${item.image}" th:src="${'/resources/uploads/'}+${item.image}"></div>
+                                                <div class="thumb-lg member-thumb mx-auto"><img class="rounded-circle"
+                                                                                                height="100px"
+                                                                                                width="100px"
+                                                                                                th:if="${item.image}"
+                                                                                                th:src="${'/resources/uploads/'}+${item.image}">
+                                                </div>
                                             </figure>
                                         </div>
                                         <div class="col">
-                                            <h4 class="text-primary" th:text="${item.foodName}">Junior Frontend
+                                            <h4 class="text-primary" th:text="${item.orders.food.name}">Junior Frontend
                                                 Developer</h4>
-                                            <h6 class="text-muted " th:text="${item.reason}">Tên món ăn</h6>
+                                            <h6 class="text-muted " th:text="${item.description}">Tên món ăn</h6>
                                         </div>
                                         <div class="col text-center  font-weight-bold">
                                             <h6 th:if="${item.status == 1}" class="text-secondary">Đang chờ xử lý</h6>
                                             <h6 th:if="${item.status == 3}" class="text-success">Đã hoàn thành</h6>
                                             <h6 th:if="${item.status == 5}" class="text-danger">Đã bị từ chối</h6>
-                                            <h6 th:if="${item.status == 4}" class="text-secondary">Đã xác nhận yêu cầu</h6>
-                                            <p class="text-muted " th:text="${item.food.created}">
+                                            <h6 th:if="${item.status == 4}" class="text-secondary">Đã xác nhận yêu
+                                                cầu</h6>
+                                            <p class="text-muted " th:text="${item.created}">
                                         </div>
                                         <div class="col">
                                             <br>
-                                            <a th:if="${item.status == 1}" class="btn btn-primary stretched-link">Hủy</a>
+                                            <a th:if="${item.status == 1}" data-bs-toggle="modal"
+                                               th:data-bs-target="'#delete'+${item.id}"
+                                               class="btn btn-primary stretched-link">Hủy</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!--                                    delete-->
+                        <div class="modal fade" th:id="'delete'+${item.id}" tabindex="-1"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Huỷ</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="@{/user/request-delete}"
+                                              method="post">
+                                            <h6>Bạn có muốn huỷ yêu cầu này không?</h6>
+                                            <input type="hidden" class="form-control"
+                                                   id="id"
+                                                   name="id"
+                                                   th:value="${item.id}">
+                                            <div class="modal-footer"
+                                                 style="margin-top: 20px">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit"
+                                                        class="btn btn-danger">Xóa
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--delete-->
                     </th:block>
                 </div>
             </section>
         </main>
 
-            <script>
+        <script>
 
-                ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
+            ClassicEditor.create(document.querySelector('#editor')).then(eidt => {
+                console.log("da" + eidt);
+            })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        </script>
+        <script>
+
+            var dodai = document.getElementById("dodai").value;
+            var a = parseInt(dodai);
+            for (var i = 1; i <= a + 10; i++) {
+                var name = "#editor" + i
+                ClassicEditor.create(document.querySelector(name)).then(eidt => {
                     console.log("da" + eidt);
                 })
                     .catch(error => {
                         console.error(error);
                     });
-
-            </script>
-            <script>
-
-                var dodai = document.getElementById("dodai").value;
-                var a = parseInt(dodai);
-                for (var i = 1; i <= a + 10; i++) {
-                    var name = "#editor" + i
-                    ClassicEditor.create(document.querySelector(name)).then(eidt => {
-                        console.log("da" + eidt);
-                    })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
+            }
 
 
-            </script>
-            <footer th:replace="fragments :: footer" class="py-4 bg-light mt-auto">
+        </script>
+        <footer th:replace="fragments :: footer" class="py-4 bg-light mt-auto">
 
-            </footer>
+        </footer>
     </div>
 
     <script src="js/JQuery3.3.1.js"></script>
