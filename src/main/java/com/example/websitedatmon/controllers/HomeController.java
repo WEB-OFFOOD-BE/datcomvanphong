@@ -1,11 +1,17 @@
 package com.example.websitedatmon.controllers;
 
+import com.example.websitedatmon.constans.ActiveConstants;
 import com.example.websitedatmon.entity.Orders;
 import com.example.websitedatmon.entity.Request;
 import com.example.websitedatmon.entity.User;
+import com.example.websitedatmon.repositorys.FoodRepository;
+import com.example.websitedatmon.repositorys.MenuRepository;
 import com.example.websitedatmon.repositorys.OrderRepository;
+import com.example.websitedatmon.repositorys.UserRepository;
 import com.example.websitedatmon.serviceImpls.OrderServiceImpl;
 import com.example.websitedatmon.serviceImpls.RequestServiceImpl;
+import com.example.websitedatmon.services.MenuService;
+import com.example.websitedatmon.services.UserService;
 import com.example.websitedatmon.utils.Middleware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +37,14 @@ public class HomeController {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    UserRepository userService;
+
+    @Autowired
+    MenuRepository menuService;
+    @Autowired
+    FoodRepository foodRepository;
+
     @GetMapping({ "/home"})
     public ModelAndView home(HttpServletRequest request)
     {
@@ -49,10 +63,9 @@ public class HomeController {
         List<Orders> done = orderRepository.getTodayAndStatus(1);
         List<Orders> progress = orderRepository.getTodayAndStatus(0);
         List<Orders> received = orderRepository.getTodayAndStatus(2);
-
-        //loinhuan
-        var loinhuan = sum - sumrequest;
-        //list food order
+        var users=  userService.findAll();
+        var food = foodRepository.findAllByIsActive(ActiveConstants.TRUE.getValue());
+        var menu = menuService.getToday();
         List<Object[]> listfoodorder = orderService.listFoodOrder();
         List<Object[]> listrequest1 = orderService.listRequest();
         mv.addObject("listfoodorder",listfoodorder);
@@ -61,6 +74,9 @@ public class HomeController {
         mv.addObject("done",done.size());
         mv.addObject("progress",progress.size());
         mv.addObject("received",received.size());
+        mv.addObject("userAmount",users.size());
+        mv.addObject("foodAmount",food.size());
+        mv.addObject("menuAmount",menu.size());
         return mv;
     }
 }

@@ -22,7 +22,7 @@
             <main>
                 <div class="container-fluid px-4">
                     <h1 class="mt-1 text-white" th:if="${session.user.role.id != 2}">Chúc bạn một ngày tốt lành</h1>
-                    <div class="row" th:if="${session.user.role.id == 2}">
+                    <div class="row" th:if="${session.user.role.id == 2 || session.user.role.id == 1}">
                         <h2 class="mt-1 text-white" >Số lượt đặt món của hôm nay</h2>
                         <hr>
                         <div class="col ">
@@ -45,9 +45,28 @@
                                 <div class="card-body">Đã nhận món : <strong th:text="${received}"></strong></div>
                             </div>
                         </div>
+
+                        <h2 class="mt-1 text-white" >Món ăn</h2>
+                        <hr>
+                    </div>
+                    <div class="col col-md-6">
+                        <div class="card bg-secondary text-white mb-4">
+                            <div class="card-body">Món ăn có trong hệ thống : <strong th:text="${menuAmount}"></strong></div>
+                        </div>
+                    </div>
+                    <div class="col col-md-6">
+                        <div class="card bg-warning text-white mb-4">
+                            <div class="card-body">Món ăn có trong menu : <strong th:text="${foodAmount}"></strong></div>
+                        </div>
+                    </div>
+                    <h2 class="mt-1 text-white" >Nhân viên</h2>
+                    <hr>
+                    <div class="col-md-6 ">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">Tổng số nhân viên trong hệ thống : <strong th:text="${userAmount}"></strong></div>
+                        </div>
                     </div>
                 </div>
-
             </main>
 
         </div>
